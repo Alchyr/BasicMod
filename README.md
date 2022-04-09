@@ -8,7 +8,7 @@ This tutorial will help with setup and the basics of Slay the Spire modding, but
 
 ## Check the wiki to get started:
 
-https://github.com/Alchyr/BasicMod/wiki/Tutorial
+https://github.com/Alchyr/BasicMod/wiki
 
 ---
 
