@@ -35,6 +35,12 @@ public class BasicMod implements
     public static final Logger logger = LogManager.getLogger(modID); //Used to output to the console.
     private static final String resourcesFolder = "basicmod";
 
+    //This is used to prefix the IDs of various objects like cards and relics,
+    //to avoid conflicts between different mods using the same name for things.
+    public static String makeID(String id) {
+        return modID + ":" + id;
+    }
+
     //This will be called by ModTheSpire because of the @SpireInitializer annotation at the top of the class.
     public static void initialize() {
         new BasicMod();
@@ -45,19 +51,16 @@ public class BasicMod implements
         logger.info(modID + " subscribed to BaseMod.");
     }
 
-    //This is used to prefix the IDs of various objects like cards and relics,
-    //to avoid conflicts between different mods using the same name for things.
-    public static String makeID(String id) {
-        return modID + ":" + id;
-    }
-
     @Override
     public void receivePostInitialize() {
-        //Set up the mod information displayed in the in-game Mods menu
-        Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
-        //This uses the information from your pom.xml
+        //This loads the image used as an icon in the in-game mods menu.
+        Texture badgeTexture = TextureLoader.getTexture(resourcePath("badge.png"));
+        //Set up the mod information displayed in the in-game mods menu.
+        //The information used is taken from your pom.xml file.
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, null);
     }
+
+    /*----------Localization----------*/
 
     //This is used to load the appropriate localization files based on language.
     private static String getLangString()
@@ -136,18 +139,19 @@ public class BasicMod implements
         return resourcesFolder + "/localization/" + lang + "/" + file;
     }
 
-    public static String imagePath(String file) {
-        return resourcesFolder + "/images/" + file;
+    public static String resourcePath(String file) {
+        return resourcesFolder + "/" + file;
     }
-
+    public static String characterPath(String file) {
+        return resourcesFolder + "/character/" + file;
+    }
     public static String powerPath(String file) {
-        return resourcesFolder + "images/powers/" + file;
+        return resourcesFolder + "/powers/" + file;
     }
 
 
-
+    //This determines the mod's ID based on information stored by ModTheSpire.
     private static void loadModInfo() {
-        //This determines the mod's id based on the information stored by ModTheSpire.
         Optional<ModInfo> infos = Arrays.stream(Loader.MODINFOS).filter((modInfo)->{
             AnnotationDB annotationDB = Patcher.annotationDBMap.get(modInfo.jarURL);
             if (annotationDB == null)

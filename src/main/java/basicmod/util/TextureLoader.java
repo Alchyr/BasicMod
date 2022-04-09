@@ -16,7 +16,7 @@ public class TextureLoader {
 
     /**
      * @param filePath - String path to the texture you want to load relative to resources,
-     * Example: imagePath("missing.png")
+     * Example: resourcePath("missing.png")
      * @return <b>com.badlogic.gdx.graphics.Texture</b> - The texture from the path provided
      */
     public static Texture getTexture(final String filePath) {
@@ -29,7 +29,7 @@ public class TextureLoader {
             } catch (GdxRuntimeException e) {
                 try
                 {
-                    return getTexture(imagePath("missing.png"), false);
+                    return getTexture(resourcePath("missing.png"), false);
                 }
                 catch (GdxRuntimeException ex) {
                     logger.info("missing.png is missing!");
@@ -52,20 +52,20 @@ public class TextureLoader {
 
     public static String getCardTextureString(final String cardName, final AbstractCard.CardType cardType)
     {
-        String textureString = imagePath("cards/" + cardType.name().toLowerCase(Locale.ROOT) + "/" + cardName + ".png");
+        String textureString = resourcePath("cards/" + cardType.name().toLowerCase(Locale.ROOT) + "/" + cardName + ".png");
 
         FileHandle h = Gdx.files.internal(textureString);
         if (!h.exists())
         {
             switch (cardType) {
                 case ATTACK:
-                    textureString = imagePath("cards/attack/default.png");
+                    textureString = resourcePath("cards/attack/default.png");
                     break;
                 case POWER:
-                    textureString = imagePath("cards/power/default.png");
+                    textureString = resourcePath("cards/power/default.png");
                     break;
                 default:
-                    textureString = imagePath("cards/skill/default.png");
+                    textureString = resourcePath("cards/skill/default.png");
                     break;
             }
         }
