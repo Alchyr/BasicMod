@@ -16,6 +16,8 @@ https://github.com/Alchyr/BasicMod/wiki
 
 You can still use this mod as a base, or you could use another template like https://github.com/DarkVexon/ProTemplate
 
+You can find more options in the pins of the #modding-technical channel in the Slay the Spire discord server.
+
 ---
 
 ### Quick(er) Setup
