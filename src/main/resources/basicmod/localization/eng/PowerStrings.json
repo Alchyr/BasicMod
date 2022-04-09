@@ -1,0 +1,8 @@
+{
+  "${ModID}:PowerID": {
+    "NAME": "Ultimate Power",
+    "DESCRIPTIONS": [
+      "You are Very Cool and Strong."
+    ]
+  }
+}

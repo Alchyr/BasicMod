@@ -1,0 +1,13 @@
+{
+  "${modID}:CharacterID": {
+    "NAMES": [
+      "The Name (Displayed in character select)",
+      "the Name (but 'the' is lowercase, this is displayed at the top left during gameplay)"
+    ],
+    "TEXT": [
+      "Line #1 of character select description. NL Line 2 of character select description.",
+      " NL Text displayed when smacking the heart. The next one is used for the Vampires event. Usually you just change the last bit.",
+      "Navigating an unlit street, you come across several hooded figures in the midst of some dark ritual. As you approach, they turn to you in eerie unison. The tallest among them bares fanged teeth and extends a long, pale hand towards you. NL ~\"Join~ ~us~ ~basic~ ~one,~ ~and~ ~feel~ ~the~ ~warmth~ ~of~ ~the~ ~Spire.\"~"
+    ]
+  }
+}

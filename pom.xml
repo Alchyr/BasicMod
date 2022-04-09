@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <modID>BasicMod</modID>
+        <author>Me! (Or well, you. Put whatever you want here.)</author>
+
+        <!--Change this to match your Steam installation.-->
+        <Steam.path>C:/Program Files (x86)/steam/steamapps</Steam.path>
+
+        <!--These don't have to be up to date, it's just nice if they are.-->
+        <SlayTheSpire.version>03-07-2022</SlayTheSpire.version>
+        <ModTheSpire.version>3.25.2</ModTheSpire.version>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <!--This information will be displayed in ModTheSpire, the modded launcher.-->
+    <name>Basic Mod</name>
+    <version>0.0.0</version>
+    <description>This is a description!\nThis is a second line of description.</description>
+
+    <!--You shouldn't need to change anything below this point, but feel free to look at it.-->
+    <groupId>${modID}</groupId>
+    <artifactId>${modID}</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.megacrit.cardcrawl</groupId>
+            <artifactId>slaythespire</artifactId>
+            <version>${SlayTheSpire.version}</version>
+            <scope>system</scope>
+            <systemPath>${Steam.path}/common/SlayTheSpire/desktop-1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.evacipated.cardcrawl</groupId>
+            <artifactId>modthespire</artifactId>
+            <version>${ModTheSpire.version}</version>
+            <scope>system</scope>
+            <systemPath>${Steam.path}/workshop/content/646570/1605060445/ModTheSpire.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>basemod</groupId>
+            <artifactId>basemod</artifactId>
+            <!--Don't worry about these version numbers, they're only used for display
+                in the left sidebar under External Libraries and don't need to be accurate.-->
+            <version>5.38.0</version>
+            <scope>system</scope>
+            <systemPath>${Steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.evacipated.cardcrawl.mod</groupId>
+            <artifactId>StSLib</artifactId>
+            <version>2.2.0</version>
+            <scope>system</scope>
+            <systemPath>${Steam.path}/workshop/content/646570/1609158507/StSLib.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+
+    <!-- This is how your code is packaged into the jar file-->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.psd</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <!--This puts a copy of your mod's jar file into the SlayTheSpire mods folder so it will be loaded.-->
+                                <copy file="target/${project.artifactId}.jar" tofile="${Steam.path}/common/SlayTheSpire/mods/${project.artifactId}.jar"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>ModTheSpire.json</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <!-- Include these files for being processed with the project variables defined above !-->
+                    <include>*.json</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>
