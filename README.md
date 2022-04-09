@@ -8,7 +8,7 @@ This tutorial will help with setup and the basics of Slay the Spire modding, but
 
 ## Check the wiki to get started:
 
-https://github.com/Alchyr/BasicMod/wiki
+https://github.com/Alchyr/BasicMod/wiki/Tutorial
 
 ---
 
@@ -18,9 +18,10 @@ You can still use this mod as a base, or you could use another template like htt
 
 ---
 
-### Quick Setup
+### Quick(er) Setup
 
-
+This is the step of the process exclusively for setting up BasicMod.
+https://github.com/Alchyr/BasicMod/wiki/BasicMod-Setup
 
 ---
 

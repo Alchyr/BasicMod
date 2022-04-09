@@ -97,22 +97,20 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <excludes>
+                <excludes> <!-- These files will not be filtered. -->
                     <exclude>ModTheSpire.json</exclude>
+                    <exclude>**/*.json</exclude>
                 </excludes>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <includes>
-                    <!-- Include these files for being processed with the project variables defined above !-->
-                    <include>*.json</include>
+                <includes> <!-- These files will be filtered. -->
+                    <include>**/*.json</include>
                 </includes>
             </resource>
+            <!-- Filtering replaces certain text like ${modID} with the corresponding value from this file. -->
         </resources>
     </build>
 </project>
