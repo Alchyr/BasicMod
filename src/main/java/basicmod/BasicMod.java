@@ -148,6 +148,9 @@ public class BasicMod implements
     public static String powerPath(String file) {
         return resourcesFolder + "/powers/" + file;
     }
+    public static String relicPath(String file) {
+        return resourcesFolder + "/relics/" + file;
+    }
 
 
     //This determines the mod's ID based on information stored by ModTheSpire.
