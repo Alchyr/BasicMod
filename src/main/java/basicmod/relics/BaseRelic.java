@@ -9,10 +9,10 @@ import static basicmod.BasicMod.relicPath;
 public abstract class BaseRelic extends CustomRelic {
     protected String imageName;
 
-    public BaseRelic(String id, String imageName, RelicTier tier, LandingSound sfx) {
-        super(id, TextureLoader.getTexture(relicPath(imageName + ".png")), tier, sfx);
+    public BaseRelic(String id, RelicTier tier, LandingSound sfx) {
+        super(id, TextureLoader.getTexture(relicPath(unPrefix(id) + ".png")), tier, sfx);
 
-        this.imageName = imageName;
+        this.imageName = unPrefix(id);
         outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"));
     }
 
@@ -21,5 +21,9 @@ public abstract class BaseRelic extends CustomRelic {
         if (largeImg == null) {
             this.largeImg = ImageMaster.loadImage(relicPath("large/" + imageName + ".png"));
         }
+    }
+
+    private static String unPrefix(String id) {
+        return id.substring(id.indexOf(":") + 1);
     }
 }
