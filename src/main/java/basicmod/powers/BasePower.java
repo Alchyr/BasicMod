@@ -26,7 +26,9 @@ public abstract class BasePower extends AbstractPower {
         this.ID = id;
         this.isTurnBased = isTurnBased;
 
-        this.name = getPowerStrings(this.ID).NAME;
+        PowerStrings strings = getPowerStrings(this.ID);
+        this.name = strings.NAME;
+        this.DESCRIPTIONS = strings.DESCRIPTIONS;
 
         this.owner = owner;
         this.source = source;
