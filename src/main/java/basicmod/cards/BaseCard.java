@@ -36,11 +36,11 @@ public abstract class BaseCard extends CustomCard {
     protected boolean upgInnate;
 
     public BaseCard(CardInfo cardInfo) {
-        this(cardInfo.cardName, cardInfo.cardCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor);
+        this(cardInfo.baseId, cardInfo.baseCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor);
     }
     public BaseCard(CardInfo cardInfo, boolean upgradesDescription)
     {
-        this(cardInfo.cardName, cardInfo.cardCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor, upgradesDescription);
+        this(cardInfo.baseId, cardInfo.baseCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor, upgradesDescription);
     }
 
     public BaseCard(String cardName, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color)
