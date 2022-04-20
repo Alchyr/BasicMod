@@ -22,7 +22,10 @@ public abstract class BasePower extends AbstractPower {
     public BasePower(String id, PowerType powerType, boolean isTurnBased, AbstractCreature owner, AbstractCreature source, int amount) {
         this(id, powerType, isTurnBased, owner, source, amount, true);
     }
-    public BasePower(String id, PowerType powerType, boolean isTurnBased, AbstractCreature owner, AbstractCreature source, int amount, boolean loadImage) {
+    public BasePower(String id, PowerType powerType, boolean isTurnBased, AbstractCreature owner, AbstractCreature source, int amount, boolean initDescription) {
+        this(id, powerType, isTurnBased, owner, source, amount, initDescription, true);
+    }
+    public BasePower(String id, PowerType powerType, boolean isTurnBased, AbstractCreature owner, AbstractCreature source, int amount, boolean initDescription, boolean loadImage) {
         this.ID = id;
         this.isTurnBased = isTurnBased;
 
@@ -53,6 +56,7 @@ public abstract class BasePower extends AbstractPower {
             }
         }
 
-        this.updateDescription();
+        if (initDescription)
+            this.updateDescription();
     }
 }
