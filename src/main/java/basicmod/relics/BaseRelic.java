@@ -1,18 +1,32 @@
 package basicmod.relics;
 
 import basemod.abstracts.CustomRelic;
+import basemod.helpers.RelicType;
 import basicmod.util.TextureLoader;
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 
 import static basicmod.BasicMod.relicPath;
 
 public abstract class BaseRelic extends CustomRelic {
+    public AbstractCard.CardColor pool = null;
+    public RelicType relicType = RelicType.SHARED;
     protected String imageName;
 
-    public BaseRelic(String id, RelicTier tier, LandingSound sfx) {
-        super(id, TextureLoader.getTexture(relicPath(unPrefix(id) + ".png")), tier, sfx);
+    //for character specific relics
+    public BaseRelic(String id, String imageName, AbstractCard.CardColor pool, RelicTier tier, LandingSound sfx) {
+        super(id, TextureLoader.getTexture(relicPath(imageName + ".png")), tier, sfx);
 
-        this.imageName = unPrefix(id);
+        setPool(pool);
+
+        this.imageName = imageName;
+        outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"));
+    }
+
+    public BaseRelic(String id, String imageName, RelicTier tier, LandingSound sfx) {
+        super(id, TextureLoader.getTexture(relicPath(imageName + ".png")), tier, sfx);
+
+        this.imageName = imageName;
         outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"));
     }
 
@@ -23,7 +37,23 @@ public abstract class BaseRelic extends CustomRelic {
         }
     }
 
-    private static String unPrefix(String id) {
-        return id.substring(id.indexOf(":") + 1);
+    private void setPool(AbstractCard.CardColor pool) {
+        switch (pool) { //Basegame pools are handled differently
+            case RED:
+                relicType = RelicType.RED;
+                break;
+            case GREEN:
+                relicType = RelicType.GREEN;
+                break;
+            case BLUE:
+                relicType = RelicType.BLUE;
+                break;
+            case PURPLE:
+                relicType = RelicType.PURPLE;
+                break;
+            default:
+                this.pool = pool;
+                break;
+        }
     }
 }
