@@ -20,14 +20,20 @@ public abstract class BaseRelic extends CustomRelic {
         setPool(pool);
 
         this.imageName = imageName;
-        outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"));
+        loadOutline();
     }
 
     public BaseRelic(String id, String imageName, RelicTier tier, LandingSound sfx) {
         super(id, TextureLoader.getTexture(relicPath(imageName + ".png")), tier, sfx);
 
         this.imageName = imageName;
+        loadOutline();
+    }
+
+    protected void loadOutline() {
         outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"));
+        if (outlineImg == null)
+            outlineImg = img;
     }
 
     @Override
