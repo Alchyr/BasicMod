@@ -101,7 +101,7 @@ public class BasicMod implements
         BaseMod.loadCustomStringsFile(RelicStrings.class,
                 localizationPath(lang, "RelicStrings.json"));
         BaseMod.loadCustomStringsFile(UIStrings.class,
-                localizationPath(lang, "CharacterStrings.json"));
+                localizationPath(lang, "UIStrings.json"));
     }
 
     @Override
