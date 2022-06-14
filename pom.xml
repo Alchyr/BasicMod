@@ -23,6 +23,9 @@
     <description>This is a description!\nThis is a second line of description.</description>
 
     <!--You shouldn't need to change anything below this point, but feel free to look at it.-->
+    <!--You'll get a warning regarding these when you package your mod, but don't worry, it's just set up like this for convenience.-->
+    <!--Technically these should be changed individually, but this allows you to just set it in one place.-->
+    <!--Bad for larger projects, but for a personal mod it's fine.-->
     <groupId>${modID}</groupId>
     <artifactId>${modID}</artifactId>
 
