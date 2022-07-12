@@ -20,13 +20,6 @@ You can find more options in the pins of the #modding-technical channel in the S
 
 ---
 
-### Quick(er) Setup
-
-This is the step of the process exclusively for setting up BasicMod.
-https://github.com/Alchyr/BasicMod/wiki/BasicMod-Setup
-
----
-
 ### Some HD Slay the Spire art assets (courtesy of Gremious, creator of DefaultMod):
 
 Includes:
