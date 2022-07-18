@@ -20,6 +20,8 @@
     <!--This information will be displayed in ModTheSpire, the modded launcher.-->
     <name>Basic Mod</name>
     <version>0.0.0</version>
+    <!--Avoid using " or \ in this description, as they can cause the description to fail to load.-->
+    <!--If you really want to use them, you'll need to "escape" them by putting a backslash first, like \" or \\-->
     <description>This is a description!\nThis is a second line of description.</description>
 
     <!--You shouldn't need to change anything below this point, but feel free to look at it.-->
