@@ -5,10 +5,10 @@
         <modID>BasicMod</modID>
         <author>Me! (Or well, you. Put whatever you want here.)</author>
 
-        <!--Change this to match your Steam installation.-->
+        <!-- Change this to match your Steam installation. -->
         <Steam.path>C:/Program Files (x86)/steam/steamapps</Steam.path>
 
-        <!--These don't have to be up to date, it's just nice if they are.-->
+        <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>03-07-2022</SlayTheSpire.version>
         <ModTheSpire.version>3.25.2</ModTheSpire.version>
 
@@ -17,17 +17,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!--This information will be displayed in ModTheSpire, the modded launcher.-->
+    <!-- This information will be displayed in ModTheSpire, the modded launcher. -->
     <name>Basic Mod</name>
     <version>0.0.0</version>
-    <!--Avoid using " or \ in this description, as they can cause the description to fail to load.-->
-    <!--If you really want to use them, you'll need to "escape" them by putting a backslash first, like \" or \\-->
-    <description>This is a description!\nThis is a second line of description.</description>
+    <!-- Avoid using \ in this description, as they can cause the description to fail to load. -->
+    <!-- If you really want to use them, you'll need to "escape" them by putting another one in front, like \\ -->
+    <description>This is a description!\n"This" is a second line of description.
+    This "\\" is a slash. If you add another line like this:
+    All the spaces on the left of this will be gone. If you want spacing on a new line, do it:\n    like this.</description>
 
     <!--You shouldn't need to change anything below this point, but feel free to look at it.-->
     <!--You'll get a warning regarding these when you package your mod, but don't worry, it's just set up like this for convenience.-->
     <!--Technically these should be changed individually, but this allows you to just set it in one place.-->
-    <!--Bad for larger projects, but for a personal mod it's fine.-->
+    <!--Absolutely a no-go for larger projects, but for a personal mod it's fine.-->
     <groupId>${modID}</groupId>
     <artifactId>${modID}</artifactId>
 
@@ -85,6 +87,34 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
+                        <id>description</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <target>
+                                <property name="tempDescription" value="${project.description}"/>
+                                <loadresource property="filteredDescription">
+                                    <propertyresource name="tempDescription"/>
+                                    <filterchain>
+                                        <tokenfilter>
+                                            <filetokenizer/>
+                                            <replaceregex pattern="(\s*\n\s*)" replace="\\\\n" flags="g"/>
+                                            <replaceregex pattern='((\\\\)*)(\\?")' replace='\1\\\\"' flags="g"/>
+                                        </tokenfilter>
+                                    </filterchain>
+                                </loadresource>
+
+                                <!--suppress UnresolvedMavenProperty -->
+                                <replace file="target/classes/ModTheSpire.json" value="${filteredDescription}">
+                                    <replacetoken>!(project.description)</replacetoken>
+                                </replace>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>copy</id>
                         <phase>package</phase>
                         <configuration>
                             <target>
