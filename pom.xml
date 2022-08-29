@@ -10,7 +10,7 @@
 
         <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>03-07-2022</SlayTheSpire.version>
-        <ModTheSpire.version>3.25.2</ModTheSpire.version>
+        <ModTheSpire.version>3.29.0</ModTheSpire.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -53,14 +53,14 @@
             <artifactId>basemod</artifactId>
             <!--Don't worry about these version numbers, they're only used for display
                 in the left sidebar under External Libraries and don't need to be accurate.-->
-            <version>5.38.0</version>
+            <version>5.44.0</version>
             <scope>system</scope>
             <systemPath>${Steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.evacipated.cardcrawl.mod</groupId>
             <artifactId>StSLib</artifactId>
-            <version>2.2.0</version>
+            <version>2.4.0</version>
             <scope>system</scope>
             <systemPath>${Steam.path}/workshop/content/646570/1609158507/StSLib.jar</systemPath>
         </dependency>
