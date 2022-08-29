@@ -244,6 +244,9 @@ public abstract class BaseCard extends CustomCard {
             if (baseInnate ^ upgInnate)
                 this.isInnate = upgInnate;
 
+            if (baseEthereal ^ upgEthereal)
+                this.isEthereal = upgEthereal;
+
 
             this.initializeDescription();
         }
