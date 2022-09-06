@@ -28,12 +28,14 @@ public abstract class BaseCard extends CustomCard {
     protected int blockUpgrade;
     protected int magicUpgrade;
 
-    protected boolean baseExhaust;
-    protected boolean upgExhaust;
-    protected boolean baseEthereal;
-    protected boolean upgEthereal;
-    protected boolean baseInnate;
-    protected boolean upgInnate;
+    protected boolean baseExhaust = false;
+    protected boolean upgExhaust = false;
+    protected boolean baseEthereal = false;
+    protected boolean upgEthereal = false;
+    protected boolean baseInnate = false;
+    protected boolean upgInnate = false;
+    protected boolean baseRetain = false;
+    protected boolean upgRetain = false;
 
     public BaseCard(CardInfo cardInfo) {
         this(cardInfo.baseId, cardInfo.baseCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor);
@@ -118,6 +120,7 @@ public abstract class BaseCard extends CustomCard {
     protected final void setExhaust(boolean exhaust) { this.setExhaust(exhaust, exhaust); }
     protected final void setEthereal(boolean ethereal) { this.setEthereal(ethereal, ethereal); }
     protected final void setInnate(boolean innate) {this.setInnate(innate, innate); }
+    protected final void setSelfRetain(boolean retain) {this.setSelfRetain(retain, retain); }
 
     protected final void setDamage(int damage, int damageUpgrade)
     {
@@ -161,9 +164,16 @@ public abstract class BaseCard extends CustomCard {
     protected void setInnate(boolean baseInnate, boolean upgInnate)
     {
         this.baseInnate = baseInnate;
-        this.isInnate = baseInnate;
         this.upgInnate = upgInnate;
+        this.isInnate = baseInnate;
     }
+    protected void setSelfRetain(boolean baseRetain, boolean upgRetain)
+    {
+        this.baseRetain = baseRetain;
+        this.upgRetain = upgRetain;
+        this.selfRetain = baseRetain;
+    }
+
 
     @Override
     public AbstractCard makeStatEquivalentCopy() {
@@ -192,6 +202,8 @@ public abstract class BaseCard extends CustomCard {
             ((BaseCard) card).upgEthereal = this.upgEthereal;
             ((BaseCard) card).baseInnate = this.baseInnate;
             ((BaseCard) card).upgInnate = this.upgInnate;
+            ((BaseCard) card).baseRetain = this.baseRetain;
+            ((BaseCard) card).upgRetain = this.upgRetain;
         }
 
         return card;
@@ -246,6 +258,9 @@ public abstract class BaseCard extends CustomCard {
 
             if (baseEthereal ^ upgEthereal)
                 this.isEthereal = upgEthereal;
+
+            if (baseRetain ^ upgRetain)
+                this.selfRetain = upgRetain;
 
 
             this.initializeDescription();
