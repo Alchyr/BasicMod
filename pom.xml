@@ -134,7 +134,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <excludes> <!-- These files will not be filtered. -->
+                <excludes> <!-- These files won't not be filtered. -->
                     <exclude>ModTheSpire.json</exclude>
                     <exclude>**/*.json</exclude>
                 </excludes>
