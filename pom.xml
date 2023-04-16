@@ -5,9 +5,9 @@
         <modID>BasicMod</modID>
         <author>Me! (Or well, you. Put whatever you want here.)</author>
 
-        <!-- Change this to match your Steam installation. -->
-        <!-- if on mac, you may not need to change this if you do, change the Steam.path property at the BOTTOM of the file. this one wont affect it. -->
-        <Steam.path>C:/Program Files (x86)/steam/steamapps</Steam.path>
+        <!-- Change the path for your system to match your Steam installation. -->
+        <steam.windows>C:/Program Files (x86)/steam/steamapps</steam.windows>
+        <steam.mac>${user.home}/Library/Application Support/Steam/steamapps</steam.mac>
 
         <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>03-07-2022</SlayTheSpire.version>
@@ -40,14 +40,14 @@
             <artifactId>slaythespire</artifactId>
             <version>${SlayTheSpire.version}</version>
             <scope>system</scope>
-            <systemPath>${Steam.path}/common/SlayTheSpire/desktop-1.0.jar</systemPath>
+            <systemPath>${steam.path}${sts.path}</systemPath>
         </dependency>
         <dependency>
             <groupId>com.evacipated.cardcrawl</groupId>
             <artifactId>modthespire</artifactId>
             <version>${ModTheSpire.version}</version>
             <scope>system</scope>
-            <systemPath>${Steam.path}/workshop/content/646570/1605060445/ModTheSpire.jar</systemPath>
+            <systemPath>${steam.path}/workshop/content/646570/1605060445/ModTheSpire.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>basemod</groupId>
@@ -56,14 +56,14 @@
                 in the left sidebar under External Libraries and don't need to be accurate.-->
             <version>5.44.0</version>
             <scope>system</scope>
-            <systemPath>${Steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
+            <systemPath>${steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.evacipated.cardcrawl.mod</groupId>
             <artifactId>StSLib</artifactId>
             <version>2.4.0</version>
             <scope>system</scope>
-            <systemPath>${Steam.path}/workshop/content/646570/1609158507/StSLib.jar</systemPath>
+            <systemPath>${steam.path}/workshop/content/646570/1609158507/StSLib.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -120,7 +120,8 @@
                         <configuration>
                             <target>
                                 <!--This puts a copy of your mod's jar file into the SlayTheSpire mods folder so it will be loaded.-->
-                                <copy file="target/${project.artifactId}.jar" tofile="${Steam.path}/common/SlayTheSpire/mods/${project.artifactId}.jar"/>
+                                <!--On mac, it will be copied to another location. See further below.-->
+                                <copy file="target/${project.artifactId}.jar" tofile="${steam.path}/common/SlayTheSpire/mods/${project.artifactId}.jar"/>
                             </target>
                         </configuration>
                         <goals>
@@ -150,7 +151,18 @@
             <!-- Filtering replaces certain text like ${modID} with the corresponding value from this file. -->
         </resources>
     </build>
+
     <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <steam.path>${steam.windows}</steam.path>
+                <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
+            </properties>
+        </profile>
         <profile>
             <id>mac</id>
             <activation>
@@ -160,22 +172,10 @@
                 </os>
             </activation>
             <properties>
-
-                <Steam.path>${user.home}/Library/Application Support/Steam/steamapps</Steam.path>
+                <steam.path>${steam.mac}</steam.path>
+                <sts.path>/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/desktop-1.0.jar</sts.path>
             </properties>
-            <dependencies>
-
-                <dependency>
-                    <groupId>com.megacrit.cardcrawl</groupId>
-                    <artifactId>slaythespire</artifactId>
-                    <version>${SlayTheSpire.version}</version>
-                    <scope>system</scope>
-                    <systemPath>${Steam.path}/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/desktop-1.0.jar</systemPath>
-                    <!--<systemPath>${basedir}/../lib/desktop-1.0.jar</systemPath>-->
-                </dependency>
-            </dependencies>
             <build>
-
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -187,7 +187,7 @@
                                 <configuration>
                                     <target>
                                         <!-- This moves your mod into a common folder where all mods you make can go. -->
-                                        <copy file="target/${project.artifactId}.jar" tofile="${Steam.path}/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/mods/${project.artifactId}.jar"/>
+                                        <copy file="target/${project.artifactId}.jar" tofile="${steam.path}/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/mods/${project.artifactId}.jar"/>
                                     </target>
                                 </configuration>
                                 <goals>
