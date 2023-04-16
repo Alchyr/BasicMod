@@ -80,7 +80,7 @@ public class BasicMod implements
             This results in the default localization being used for anything that might be missing.
             The same process is used to load keywords slightly below.
         */
-        loadLocalization(defaultLanguage); //no except catching for default localization, you better have at least one that works.
+        loadLocalization(defaultLanguage); //no exception catching for default localization; you better have at least one that works.
         if (!defaultLanguage.equals(getLangString())) {
             try {
                 loadLocalization(getLangString());
