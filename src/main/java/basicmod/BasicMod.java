@@ -33,7 +33,7 @@ public class BasicMod implements
         EditKeywordsSubscriber,
         PostInitializeSubscriber {
     public static ModInfo info;
-    public static String modID;
+    public static String modID; //Edit your pom.xml to change this
     static { loadModInfo(); }
     public static final Logger logger = LogManager.getLogger(modID); //Used to output to the console.
     private static final String resourcesFolder = "basicmod";
