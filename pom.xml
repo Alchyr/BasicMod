@@ -3,15 +3,15 @@
 
     <properties>
         <modID>BasicMod</modID>
-        <author>Me! (Or well, you. Put whatever you want here.)</author>
+        <author>Me! (Or well, you. If you want to use \"quotes\" make sure you have slashes in front of them like this.)</author>
 
         <!-- Change the path for your system to match your Steam installation. -->
         <steam.windows>C:/Program Files (x86)/steam/steamapps</steam.windows>
         <steam.mac>${user.home}/Library/Application Support/Steam/steamapps</steam.mac>
 
         <!-- These don't have to be up to date, it's just nice if they are. -->
-        <SlayTheSpire.version>03-07-2022</SlayTheSpire.version>
-        <ModTheSpire.version>3.29.0</ModTheSpire.version>
+        <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
+        <ModTheSpire.version>3.30.0</ModTheSpire.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
