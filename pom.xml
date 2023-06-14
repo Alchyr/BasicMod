@@ -75,7 +75,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.3.0</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*.psd</exclude>
@@ -84,8 +84,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                    <delimiters>
+                        <delimiter>${*}</delimiter>
+                    </delimiters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>description</id>
