@@ -176,9 +176,9 @@ public abstract class BaseCard extends CustomCard {
 
             this.baseDamage = base;
             if (m != null)
-                this.calculateCardDamage(m);
+                super.calculateCardDamage(m);
             else
-                this.applyPowers();
+                super.applyPowers();
 
             this.baseDamage = tmp;
             return damage;
@@ -190,9 +190,9 @@ public abstract class BaseCard extends CustomCard {
 
             this.baseBlock = base;
             if (m != null)
-                this.calculateCardDamage(m);
+                super.calculateCardDamage(m);
             else
-                this.applyPowers();
+                super.applyPowers();
 
             this.baseBlock = tmp;
             return block;
@@ -376,10 +376,15 @@ public abstract class BaseCard extends CustomCard {
         }
     }
 
+    boolean inCalc = false;
     @Override
     public void applyPowers() {
-        for (LocalVarInfo var : cardVariables.values()) {
-            var.value = var.calculation.apply(null, var.base);
+        if (!inCalc) {
+            inCalc = true;
+            for (LocalVarInfo var : cardVariables.values()) {
+                var.value = var.calculation.apply(null, var.base);
+            }
+            inCalc = false;
         }
 
         super.applyPowers();
@@ -387,8 +392,12 @@ public abstract class BaseCard extends CustomCard {
 
     @Override
     public void calculateCardDamage(AbstractMonster m) {
-        for (LocalVarInfo var : cardVariables.values()) {
-            var.value = var.calculation.apply(m, var.base);
+        if (!inCalc) {
+            inCalc = true;
+            for (LocalVarInfo var : cardVariables.values()) {
+                var.value = var.calculation.apply(m, var.base);
+            }
+            inCalc = false;
         }
 
         super.calculateCardDamage(m);
