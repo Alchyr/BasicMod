@@ -1,17 +1,27 @@
 package basicmod.cards;
 
+import basemod.BaseMod;
 import basemod.abstracts.CustomCard;
+import basemod.abstracts.DynamicVariable;
 import basicmod.BasicMod;
 import basicmod.util.CardInfo;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.localization.CardStrings;
+import com.megacrit.cardcrawl.monsters.AbstractMonster;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static basicmod.BasicMod.makeID;
 import static basicmod.util.TextureLoader.getCardTextureString;
 
 
 public abstract class BaseCard extends CustomCard {
+    final private static Map<String, DynamicVariable> customVars = new HashMap<>();
+
     protected CardStrings cardStrings;
 
     protected boolean upgradesDescription;
@@ -36,6 +46,8 @@ public abstract class BaseCard extends CustomCard {
     protected boolean upgInnate = false;
     protected boolean baseRetain = false;
     protected boolean upgRetain = false;
+
+    final protected Map<String, LocalVarInfo> cardVariables = new HashMap<>();
 
     public BaseCard(CardInfo cardInfo) {
         this(cardInfo.baseId, cardInfo.baseCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor);
@@ -104,24 +116,6 @@ public abstract class BaseCard extends CustomCard {
     {
         this.setDamage(damage, 0);
     }
-    protected final void setBlock(int block)
-    {
-        this.setBlock(block, 0);
-    }
-    protected final void setMagic(int magic)
-    {
-        this.setMagic(magic, 0);
-    }
-    protected final void setCostUpgrade(int costUpgrade)
-    {
-        this.costUpgrade = costUpgrade;
-        this.upgradeCost = true;
-    }
-    protected final void setExhaust(boolean exhaust) { this.setExhaust(exhaust, exhaust); }
-    protected final void setEthereal(boolean ethereal) { this.setEthereal(ethereal, ethereal); }
-    protected final void setInnate(boolean innate) {this.setInnate(innate, innate); }
-    protected final void setSelfRetain(boolean retain) {this.setSelfRetain(retain, retain); }
-
     protected final void setDamage(int damage, int damageUpgrade)
     {
         this.baseDamage = this.damage = damage;
@@ -130,6 +124,11 @@ public abstract class BaseCard extends CustomCard {
             this.upgradeDamage = true;
             this.damageUpgrade = damageUpgrade;
         }
+    }
+
+    protected final void setBlock(int block)
+    {
+        this.setBlock(block, 0);
     }
     protected final void setBlock(int block, int blockUpgrade)
     {
@@ -140,6 +139,11 @@ public abstract class BaseCard extends CustomCard {
             this.blockUpgrade = blockUpgrade;
         }
     }
+
+    protected final void setMagic(int magic)
+    {
+        this.setMagic(magic, 0);
+    }
     protected final void setMagic(int magic, int magicUpgrade)
     {
         this.baseMagicNumber = this.magicNumber = magic;
@@ -149,6 +153,90 @@ public abstract class BaseCard extends CustomCard {
             this.magicUpgrade = magicUpgrade;
         }
     }
+
+    protected final void setCustomVar(String key, int base) {
+        this.setCustomVar(key, base, 0);
+    }
+    protected final void setCustomVar(String key, int base, int upgrade) {
+        if (!customVars.containsKey(key)) {
+            QuickDynamicVariable var = new QuickDynamicVariable(key);
+            customVars.put(key, var);
+            BaseMod.addDynamicVariable(var);
+        }
+        cardVariables.put(key, new LocalVarInfo(base, upgrade));
+    }
+
+    private LocalVarInfo getCustomVar(String key) {
+        return cardVariables.get(key);
+    }
+
+    protected void calculateVarAsDamage(String key) {
+        setVarCalculation(key, (m, base)->{
+            int tmp = this.baseDamage;
+
+            this.baseDamage = base;
+            if (m != null)
+                this.calculateCardDamage(m);
+            else
+                this.applyPowers();
+
+            this.baseDamage = tmp;
+            return damage;
+        });
+    }
+    protected void calculateVarAsBlock(String key) {
+        setVarCalculation(key, (m, base)->{
+            int tmp = this.baseBlock;
+
+            this.baseBlock = base;
+            if (m != null)
+                this.calculateCardDamage(m);
+            else
+                this.applyPowers();
+
+            this.baseBlock = tmp;
+            return block;
+        });
+    }
+    protected void setVarCalculation(String key, BiFunction<AbstractMonster, Integer, Integer> calculation) {
+        cardVariables.get(key).calculation = calculation;
+    }
+
+    public int customVarBase(String key) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null)
+            return -1;
+        return var.base;
+    }
+    public int customVar(String key) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null)
+            return -1;
+        return var.value;
+    }
+    public boolean isCustomVarModified(String key) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null)
+            return false;
+        return var.isModified();
+    }
+    public boolean customVarUpgraded(String key) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null)
+            return false;
+        return var.upgraded;
+    }
+
+
+    protected final void setCostUpgrade(int costUpgrade)
+    {
+        this.costUpgrade = costUpgrade;
+        this.upgradeCost = true;
+    }
+    protected final void setExhaust(boolean exhaust) { this.setExhaust(exhaust, exhaust); }
+    protected final void setEthereal(boolean ethereal) { this.setEthereal(ethereal, ethereal); }
+    protected final void setInnate(boolean innate) {this.setInnate(innate, innate); }
+    protected final void setSelfRetain(boolean retain) {this.setSelfRetain(retain, retain); }
     protected final void setExhaust(boolean baseExhaust, boolean upgExhaust)
     {
         this.baseExhaust = baseExhaust;
@@ -204,6 +292,19 @@ public abstract class BaseCard extends CustomCard {
             ((BaseCard) card).upgInnate = this.upgInnate;
             ((BaseCard) card).baseRetain = this.baseRetain;
             ((BaseCard) card).upgRetain = this.upgRetain;
+
+            for (Map.Entry<String, LocalVarInfo> varEntry : cardVariables.entrySet()) {
+                LocalVarInfo target = ((BaseCard) card).getCustomVar(varEntry.getKey()),
+                        current = varEntry.getValue();
+                if (target == null) {
+                    ((BaseCard) card).setCustomVar(varEntry.getKey(), current.base, current.upgrade);
+                    target = ((BaseCard) card).getCustomVar(varEntry.getKey());
+                }
+                target.base = current.base;
+                target.value = current.value;
+                target.upgrade = current.upgrade;
+                target.calculation = current.calculation;
+            }
         }
 
         return card;
@@ -250,6 +351,14 @@ public abstract class BaseCard extends CustomCard {
             if (upgradeMagic)
                 this.upgradeMagicNumber(magicUpgrade);
 
+            for (LocalVarInfo var : cardVariables.values()) {
+                if (var.upgrade != 0) {
+                    var.base += var.upgrade;
+                    var.value = var.base;
+                    var.upgraded = true;
+                }
+            }
+
             if (baseExhaust ^ upgExhaust)
                 this.exhaust = upgExhaust;
 
@@ -264,6 +373,89 @@ public abstract class BaseCard extends CustomCard {
 
 
             this.initializeDescription();
+        }
+    }
+
+    @Override
+    public void applyPowers() {
+        for (LocalVarInfo var : cardVariables.values()) {
+            var.value = var.calculation.apply(null, var.base);
+        }
+
+        super.applyPowers();
+    }
+
+    @Override
+    public void calculateCardDamage(AbstractMonster m) {
+        for (LocalVarInfo var : cardVariables.values()) {
+            var.value = var.calculation.apply(m, var.base);
+        }
+
+        super.calculateCardDamage(m);
+    }
+
+    private static class QuickDynamicVariable extends DynamicVariable {
+        final String localKey, key;
+
+        public QuickDynamicVariable(String key) {
+            this.localKey = key;
+            this.key = makeID(key);
+        }
+
+        @Override
+        public String key() {
+            return key;
+        }
+
+        @Override
+        public void setIsModified(AbstractCard c, boolean v) {
+            if (c instanceof BaseCard) {
+                LocalVarInfo var = ((BaseCard) c).getCustomVar(localKey);
+                if (var != null)
+                    var.forceModified = v;
+            }
+        }
+
+        @Override
+        public boolean isModified(AbstractCard c) {
+            return c instanceof BaseCard && ((BaseCard) c).isCustomVarModified(localKey);
+        }
+
+        @Override
+        public int value(AbstractCard c) {
+            return c instanceof BaseCard ? ((BaseCard) c).customVar(localKey) : 0;
+        }
+
+        @Override
+        public int baseValue(AbstractCard c) {
+            return c instanceof BaseCard ? ((BaseCard) c).customVarBase(localKey) : 0;
+        }
+
+        @Override
+        public boolean upgraded(AbstractCard c) {
+            return c instanceof BaseCard && ((BaseCard) c).customVarUpgraded(localKey);
+        }
+    }
+
+
+    private static class LocalVarInfo {
+        int base, value, upgrade;
+        boolean upgraded = false;
+        boolean forceModified = false;
+
+        BiFunction<AbstractMonster, Integer, Integer> calculation = LocalVarInfo::noCalc;
+
+        public LocalVarInfo(int base, int upgrade) {
+            this.base = this.value = base;
+            this.upgrade = upgrade;
+        }
+
+        private static int noCalc(AbstractMonster m, int base) {
+            return base;
+        }
+
+        public boolean isModified() {
+            return forceModified || base != value;
         }
     }
 }
