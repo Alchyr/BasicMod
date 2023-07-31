@@ -1,5 +1,6 @@
 package basicmod.powers;
 
+import basicmod.util.GeneralUtils;
 import basicmod.util.TextureLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -40,7 +41,7 @@ public abstract class BasePower extends AbstractPower {
 
         if (loadImage)
         {
-            String unPrefixed = id.substring(id.indexOf(":") + 1);
+            String unPrefixed = GeneralUtils.removePrefix(id);
             Texture normalTexture = TextureLoader.getPowerTexture(unPrefixed);
             Texture hiDefImage = TextureLoader.getHiDefPowerTexture(unPrefixed);
             if (hiDefImage != null)

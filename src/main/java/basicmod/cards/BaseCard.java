@@ -13,15 +13,15 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
-import static basicmod.BasicMod.makeID;
+import static basicmod.util.GeneralUtils.removePrefix;
 import static basicmod.util.TextureLoader.getCardTextureString;
 
 
 public abstract class BaseCard extends CustomCard {
     final private static Map<String, DynamicVariable> customVars = new HashMap<>();
 
+    protected static String makeID(String name) { return BasicMod.makeID(name); }
     protected CardStrings cardStrings;
 
     protected boolean upgradesDescription;
@@ -49,19 +49,17 @@ public abstract class BaseCard extends CustomCard {
 
     final protected Map<String, LocalVarInfo> cardVariables = new HashMap<>();
 
-    public BaseCard(CardInfo cardInfo) {
-        this(cardInfo.baseId, cardInfo.baseCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor);
+    public BaseCard(String ID, CardInfo info) {
+        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor);
     }
-    public BaseCard(CardInfo cardInfo, boolean upgradesDescription)
-    {
-        this(cardInfo.baseId, cardInfo.baseCost, cardInfo.cardType, cardInfo.cardTarget, cardInfo.cardRarity, cardInfo.cardColor, upgradesDescription);
+    public BaseCard(String ID, CardInfo info, boolean upgradesDescription) {
+        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, upgradesDescription);
     }
-
-    public BaseCard(String baseID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color)
+    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color)
     {
-        super(makeID(baseID), "", getCardTextureString(baseID, cardType), cost, "", cardType, color, rarity, target);
-
-        loadStrings();
+        super(ID, getName(ID), getCardTextureString(removePrefix(ID), cardType), cost, getInitialDescription(ID), cardType, color, rarity, target);
+        this.cardStrings = CardCrawlGame.languagePack.getCardStrings(cardID);
+        this.originalName = cardStrings.NAME;
 
         this.baseCost = cost;
 
@@ -75,40 +73,18 @@ public abstract class BaseCard extends CustomCard {
         this.damageUpgrade = 0;
         this.blockUpgrade = 0;
         this.magicUpgrade = 0;
-
-        initializeTitle();
-        initializeDescription();
     }
-
-    public BaseCard(String cardName, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, boolean upgradesDescription)
+    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, boolean upgradesDescription)
     {
-        super(makeID(cardName), "", getCardTextureString(cardName, cardType), cost, "", cardType, color, rarity, target);
-
-        loadStrings();
-
-        this.baseCost = cost;
-
+        this(ID, cost, cardType, target, rarity, color);
         this.upgradesDescription = upgradesDescription;
-        this.upgradeCost = false;
-        this.upgradeDamage = false;
-        this.upgradeBlock = false;
-        this.upgradeMagic = false;
-
-        this.costUpgrade = cost;
-        this.damageUpgrade = 0;
-        this.blockUpgrade = 0;
-        this.magicUpgrade = 0;
-
-        initializeTitle();
-        initializeDescription();
     }
 
-    private void loadStrings() {
-        cardStrings = CardCrawlGame.languagePack.getCardStrings(cardID);
-
-        this.rawDescription = cardStrings.DESCRIPTION;
-        this.originalName = cardStrings.NAME;
-        this.name = originalName;
+    private static String getName(String ID) {
+        return CardCrawlGame.languagePack.getCardStrings(ID).NAME;
+    }
+    private static String getInitialDescription(String ID) {
+        return CardCrawlGame.languagePack.getCardStrings(ID).NAME;
     }
 
     //Methods meant for constructor use

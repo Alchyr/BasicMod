@@ -14,4 +14,8 @@ public class GeneralUtils {
         sb.append(arr[arr.length - 1]);
         return sb.toString();
     }
+
+    public static String removePrefix(String ID) {
+        return ID.substring(ID.indexOf(":") + 1);
+    }
 }

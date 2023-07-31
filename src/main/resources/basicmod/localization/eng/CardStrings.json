@@ -2,7 +2,7 @@
   "${modID}:ExampleCard": {
     "NAME": "Name",
     "DESCRIPTION": "Description.",
-    "UPGRADE_DESCRIPTION": "If you change the constructor of your card to use super(cardInfo, true); this will be the card's description when it is upgraded.",
+    "UPGRADE_DESCRIPTION": "This will automatically be used if the card is upgraded. Remove it if unneeded.",
     "EXTENDED_DESCRIPTION": [
       "You can put more text in here.",
       "If you need to use it for stuff.",
