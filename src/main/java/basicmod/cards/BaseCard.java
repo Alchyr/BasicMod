@@ -84,7 +84,7 @@ public abstract class BaseCard extends CustomCard {
         return CardCrawlGame.languagePack.getCardStrings(ID).NAME;
     }
     private static String getInitialDescription(String ID) {
-        return CardCrawlGame.languagePack.getCardStrings(ID).NAME;
+        return CardCrawlGame.languagePack.getCardStrings(ID).DESCRIPTION;
     }
 
     //Methods meant for constructor use
