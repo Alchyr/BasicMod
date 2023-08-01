@@ -4,7 +4,7 @@ import basemod.BaseMod;
 import basemod.abstracts.CustomCard;
 import basemod.abstracts.DynamicVariable;
 import basicmod.BasicMod;
-import basicmod.util.CardInfo;
+import basicmod.util.CardStats;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.localization.CardStrings;
@@ -49,10 +49,10 @@ public abstract class BaseCard extends CustomCard {
 
     final protected Map<String, LocalVarInfo> cardVariables = new HashMap<>();
 
-    public BaseCard(String ID, CardInfo info) {
+    public BaseCard(String ID, CardStats info) {
         this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor);
     }
-    public BaseCard(String ID, CardInfo info, boolean upgradesDescription) {
+    public BaseCard(String ID, CardStats info, boolean upgradesDescription) {
         this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, upgradesDescription);
     }
     public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color)
