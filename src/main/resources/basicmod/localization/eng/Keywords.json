@@ -9,15 +9,15 @@
       "the",
       "text"
     ],
-    "DESCRIPTION": "This is displayed in the tooltip. Note, spaces are not allowed in NAMES. Also, they should be entirely lowercase. For multi-word keywords, see the next one."
+    "DESCRIPTION": "This is displayed in the tooltip. Spaces should not be used be avoided in NAMES, with the exception of multi-word keywords (see next entry)."
   },
   {
     "PROPER_NAME": "Multiword Keyword",
     "NAMES": [
-      "Multiword Keyword",
+      "multiword keyword",
       "multiword_keyword",
       "multiword_keywords"
     ],
-    "DESCRIPTION": "Make sure the first element in the NAMES is the same as your PROPER_NAME. The rest should use _ to replace spaces and be entirely lowercase. In card text, you'll use the underscore versions."
+    "DESCRIPTION": "Make sure the first element in NAMES has no underscores. The rest should use _ in the place of spaces. In card text, you'll use the underscore versions."
   }
 ]

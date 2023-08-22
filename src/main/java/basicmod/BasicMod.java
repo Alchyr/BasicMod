@@ -57,7 +57,7 @@ public class BasicMod implements
     @Override
     public void receivePostInitialize() {
         //This loads the image used as an icon in the in-game mods menu.
-        Texture badgeTexture = TextureLoader.getTexture(resourcePath("badge.png"));
+        Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
         //Set up the mod information displayed in the in-game mods menu.
         //The information used is taken from your pom.xml file.
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, null);
@@ -128,6 +128,7 @@ public class BasicMod implements
                 json = Gdx.files.internal(localizationPath(getLangString(), "Keywords.json")).readString(String.valueOf(StandardCharsets.UTF_8));
                 keywords = gson.fromJson(json, KeywordInfo[].class);
                 for (KeywordInfo keyword : keywords) {
+                    keyword.prep();
                     registerKeyword(keyword);
                 }
             }
@@ -147,17 +148,17 @@ public class BasicMod implements
         return resourcesFolder + "/localization/" + lang + "/" + file;
     }
 
-    public static String resourcePath(String file) {
-        return resourcesFolder + "/" + file;
+    public static String imagePath(String file) {
+        return resourcesFolder + "/images/" + file;
     }
     public static String characterPath(String file) {
-        return resourcesFolder + "/character/" + file;
+        return resourcesFolder + "/images/character/" + file;
     }
     public static String powerPath(String file) {
-        return resourcesFolder + "/powers/" + file;
+        return resourcesFolder + "/images/powers/" + file;
     }
     public static String relicPath(String file) {
-        return resourcesFolder + "/relics/" + file;
+        return resourcesFolder + "/images/relics/" + file;
     }
 
 

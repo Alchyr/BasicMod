@@ -9,4 +9,11 @@ public class KeywordInfo {
 
     public KeywordInfo() {
     }
+
+    public void prep() {
+        for (int i = 0; i < NAMES.length; ++i)
+        {
+            NAMES[i] = NAMES[i].toLowerCase();
+        }
+    }
 }

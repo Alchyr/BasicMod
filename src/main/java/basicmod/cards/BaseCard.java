@@ -29,11 +29,12 @@ public abstract class BaseCard extends CustomCard {
     protected int baseCost;
 
     protected boolean upgradeCost;
+    protected int costUpgrade;
+
     protected boolean upgradeDamage;
     protected boolean upgradeBlock;
     protected boolean upgradeMagic;
 
-    protected int costUpgrade;
     protected int damageUpgrade;
     protected int blockUpgrade;
     protected int magicUpgrade;
