@@ -65,10 +65,7 @@ public abstract class BasePotion extends AbstractPotion {
 
         this.tips.clear();
         this.tips.add(new PowerTip(this.name, this.description));
-        List<PowerTip> extraTips = getAdditionalTips();
-        if (extraTips != null) {
-            this.tips.addAll(extraTips);
-        }
+        addAdditionalTips();
     }
 
     @Override
@@ -77,8 +74,8 @@ public abstract class BasePotion extends AbstractPotion {
     }
 
     public abstract String getDescription();
-    public List<PowerTip> getAdditionalTips() {
-        return null;
+    public void addAdditionalTips() {
+
     }
 
     public Texture getLiquidImg() {
