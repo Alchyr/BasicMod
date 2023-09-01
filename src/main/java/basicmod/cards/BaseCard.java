@@ -149,6 +149,9 @@ public abstract class BaseCard extends CustomCard {
 
     protected void calculateVarAsDamage(String key) {
         setVarCalculation(key, (m, base)->{
+            boolean wasMultiDamage = this.isMultiDamage;
+            this.isMultiDamage = false;
+
             int tmp = this.baseDamage;
 
             this.baseDamage = base;
@@ -158,6 +161,8 @@ public abstract class BaseCard extends CustomCard {
                 super.applyPowers();
 
             this.baseDamage = tmp;
+            this.isMultiDamage = wasMultiDamage;
+
             return damage;
         });
     }

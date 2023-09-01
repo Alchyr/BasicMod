@@ -22,10 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.scannotation.AnnotationDB;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @SpireInitializer
 public class BasicMod implements
@@ -71,6 +68,8 @@ public class BasicMod implements
         return Settings.language.name().toLowerCase();
     }
     private static final String defaultLanguage = "eng";
+
+    public static final Map<String, KeywordInfo> keywords = new HashMap<>();
 
     @Override
     public void receiveEditStrings() {
@@ -141,6 +140,10 @@ public class BasicMod implements
 
     private void registerKeyword(KeywordInfo info) {
         BaseMod.addKeyword(modID.toLowerCase(), info.PROPER_NAME, info.NAMES, info.DESCRIPTION);
+        if (!info.ID.isEmpty())
+        {
+            keywords.put(info.ID, info);
+        }
     }
 
     //These methods are used to generate the correct filepaths to various parts of the resources folder.
