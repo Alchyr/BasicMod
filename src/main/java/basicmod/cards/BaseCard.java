@@ -131,6 +131,8 @@ public abstract class BaseCard extends CustomCard {
         }
     }
 
+
+
     protected final void setCustomVar(String key, int base) {
         this.setCustomVar(key, base, 0);
     }
@@ -142,6 +144,96 @@ public abstract class BaseCard extends CustomCard {
         }
         cardVariables.put(key, new LocalVarInfo(base, upgrade));
     }
+
+    protected enum VariableType {
+        DAMAGE,
+        BLOCK,
+        MAGIC
+    }
+    protected final void setCustomVar(String key, VariableType type, int base) {
+        setCustomVar(key, type, base, 0);
+    }
+    protected final void setCustomVar(String key, VariableType type, int base, int upgrade) {
+        if (!customVars.containsKey(key)) {
+            QuickDynamicVariable var = new QuickDynamicVariable(key);
+            customVars.put(key, var);
+            BaseMod.addDynamicVariable(var);
+        }
+        cardVariables.put(key, new LocalVarInfo(base, upgrade));
+
+        switch (type) {
+            case DAMAGE:
+                calculateVarAsDamage(key);
+                break;
+            case BLOCK:
+                calculateVarAsBlock(key);
+                break;
+        }
+    }
+    protected final void setCustomVar(String key, VariableType type, int base, BiFunction<AbstractMonster, Integer, Integer> preCalc) {
+        setCustomVar(key, type, base, 0, preCalc);
+    }
+    protected final void setCustomVar(String key, VariableType type, int base, int upgrade, BiFunction<AbstractMonster, Integer, Integer> preCalc) {
+        setCustomVar(key, type, base, upgrade, preCalc, (m, val)->val);
+    }
+    protected final void setCustomVar(String key, VariableType type, int base, BiFunction<AbstractMonster, Integer, Integer> preCalc, BiFunction<AbstractMonster, Integer, Integer> postCalc) {
+        setCustomVar(key, type, base, 0, preCalc, postCalc);
+    }
+    protected final void setCustomVar(String key, VariableType type, int base, int upgrade, BiFunction<AbstractMonster, Integer, Integer> preCalc, BiFunction<AbstractMonster, Integer, Integer> postCalc) {
+        if (!customVars.containsKey(key)) {
+            QuickDynamicVariable var = new QuickDynamicVariable(key);
+            customVars.put(key, var);
+            BaseMod.addDynamicVariable(var);
+        }
+        cardVariables.put(key, new LocalVarInfo(base, upgrade));
+
+        switch (type) {
+            case DAMAGE:
+                setVarCalculation(key, (m, baseVal) -> {
+                    boolean wasMultiDamage = this.isMultiDamage;
+                    this.isMultiDamage = false;
+
+                    int tmp = this.baseDamage;
+
+                    this.baseDamage = baseVal;
+
+                    this.baseDamage = preCalc.apply(m, this.baseDamage);
+
+                    if (m != null)
+                        super.calculateCardDamage(m);
+                    else
+                        super.applyPowers();
+
+                    this.damage = postCalc.apply(m, this.damage);
+
+                    this.baseDamage = tmp;
+                    this.isMultiDamage = wasMultiDamage;
+
+                    return damage;
+                });
+                break;
+            case BLOCK:
+                setVarCalculation(key, (m, baseVal)->{
+                    int tmp = this.baseBlock;
+
+                    this.baseBlock = baseVal;
+
+                    this.baseBlock = preCalc.apply(m, this.baseBlock);
+
+                    if (m != null)
+                        super.calculateCardDamage(m);
+                    else
+                        super.applyPowers();
+
+                    this.block = postCalc.apply(m, this.block);
+
+                    this.baseBlock = tmp;
+                    return block;
+                });
+                break;
+        }
+    }
+
 
     private LocalVarInfo getCustomVar(String key) {
         return cardVariables.get(key);
