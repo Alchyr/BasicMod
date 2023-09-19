@@ -7,9 +7,11 @@ import basicmod.BasicMod;
 import basicmod.util.CardStats;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.localization.CardStrings;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -79,6 +81,7 @@ public abstract class BaseCard extends CustomCard {
     {
         this(ID, cost, cardType, target, rarity, color);
         this.upgradesDescription = upgradesDescription;
+        setCustomVar("damage2", VariableType.DAMAGE, 10, 5);
     }
 
     private static String getName(String ID) {
@@ -288,6 +291,12 @@ public abstract class BaseCard extends CustomCard {
             return -1;
         return var.value;
     }
+    public int[] customVarMulti(String key) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null)
+            return null;
+        return var.aoeValue;
+    }
     public boolean isCustomVarModified(String key) {
         LocalVarInfo var = cardVariables.get(key);
         if (var == null)
@@ -376,6 +385,7 @@ public abstract class BaseCard extends CustomCard {
                 }
                 target.base = current.base;
                 target.value = current.value;
+                target.aoeValue = current.aoeValue;
                 target.upgrade = current.upgrade;
                 target.calculation = current.calculation;
             }
@@ -458,6 +468,19 @@ public abstract class BaseCard extends CustomCard {
             for (LocalVarInfo var : cardVariables.values()) {
                 var.value = var.calculation.apply(null, var.base);
             }
+            if (isMultiDamage) {
+                ArrayList<AbstractMonster> monsters = AbstractDungeon.getCurrRoom().monsters.monsters;
+                AbstractMonster m;
+                for (LocalVarInfo var : cardVariables.values()) {
+                    if (var.aoeValue == null || var.aoeValue.length != monsters.size())
+                        var.aoeValue = new int[monsters.size()];
+
+                    for (int i = 0; i < monsters.size(); ++i) {
+                        m = monsters.get(i);
+                        var.aoeValue[i] = var.calculation.apply(m, var.base);
+                    }
+                }
+            }
             inCalc = false;
         }
 
@@ -470,6 +493,18 @@ public abstract class BaseCard extends CustomCard {
             inCalc = true;
             for (LocalVarInfo var : cardVariables.values()) {
                 var.value = var.calculation.apply(m, var.base);
+            }
+            if (isMultiDamage) {
+                ArrayList<AbstractMonster> monsters = AbstractDungeon.getCurrRoom().monsters.monsters;
+                for (LocalVarInfo var : cardVariables.values()) {
+                    if (var.aoeValue == null || var.aoeValue.length != monsters.size())
+                        var.aoeValue = new int[monsters.size()];
+
+                    for (int i = 0; i < monsters.size(); ++i) {
+                        m = monsters.get(i);
+                        var.aoeValue[i] = var.calculation.apply(m, var.base);
+                    }
+                }
             }
             inCalc = false;
         }
@@ -523,6 +558,7 @@ public abstract class BaseCard extends CustomCard {
 
     private static class LocalVarInfo {
         int base, value, upgrade;
+        int[] aoeValue = null;
         boolean upgraded = false;
         boolean forceModified = false;
 
