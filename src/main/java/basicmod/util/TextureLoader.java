@@ -37,7 +37,12 @@ public class TextureLoader {
                 }
             }
         }
-        return textures.get(filePath);
+        Texture t = textures.get(filePath);
+        if (t != null && t.getTextureObjectHandle() == 0) {
+            textures.remove(filePath);
+            t = getTexture(filePath, linear);
+        }
+        return t;
     }
     public static Texture getTextureNull(final String filePath) {
         if (textures.get(filePath) == null) {
