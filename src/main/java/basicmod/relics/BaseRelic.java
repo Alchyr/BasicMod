@@ -16,28 +16,33 @@ public abstract class BaseRelic extends CustomRelic {
 
     //for character specific relics
     public BaseRelic(String id, String imageName, AbstractCard.CardColor pool, RelicTier tier, LandingSound sfx) {
-        super(id, TextureLoader.getTexture(relicPath(imageName + ".png")), tier, sfx);
+        this(id, imageName, tier, sfx);
 
         setPool(pool);
-
-        this.imageName = imageName;
-        loadOutline();
     }
 
     public BaseRelic(String id, RelicTier tier, LandingSound sfx) {
         this(id, GeneralUtils.removePrefix(id), tier, sfx);
     }
     public BaseRelic(String id, String imageName, RelicTier tier, LandingSound sfx) {
-        super(id, TextureLoader.getTexture(relicPath(imageName + ".png")), tier, sfx);
+        super(id, "", tier, sfx);
 
         this.imageName = imageName;
-        loadOutline();
+        loadTexture();
     }
 
-    protected void loadOutline() {
-        outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"));
-        if (outlineImg == null)
-            outlineImg = img;
+    protected void loadTexture() {
+        this.img = TextureLoader.getTextureNull(relicPath(imageName + ".png"), true);
+        if (img != null) {
+            outlineImg = TextureLoader.getTextureNull(relicPath(imageName + "Outline.png"), true);
+            if (outlineImg == null)
+                outlineImg = img;
+        }
+        else {
+            ImageMaster.loadRelicImg("Derp Rock", "derpRock.png");
+            this.img = ImageMaster.getRelicImg("Derp Rock");
+            this.outlineImg = ImageMaster.getRelicOutlineImg("Derp Rock");
+        }
     }
 
     @Override

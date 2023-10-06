@@ -17,11 +17,18 @@ public class TextureLoader {
     /**
      * @param filePath - String path to the texture you want to load relative to resources,
      * Example: imagePath("missing.png")
-     * @return <b>com.badlogic.gdx.graphics.Texture</b> - The texture from the path provided
+     * @return <b>com.badlogic.gdx.graphics.Texture</b> - The texture from the path provided, or a "missing image" texture if it doesn't exist.
      */
     public static Texture getTexture(final String filePath) {
         return getTexture(filePath, true);
     }
+
+    /**
+     * @param filePath - String path to the texture you want to load relative to resources,
+     * Example: imagePath("missing.png")
+     * @param linear - Whether the image should use a linear or nearest filter for scaling.
+     * @return <b>com.badlogic.gdx.graphics.Texture</b> - The texture from the path provided, or a "missing image" texture if it doesn't exist.
+     */
     public static Texture getTexture(final String filePath, boolean linear) {
         if (textures.get(filePath) == null) {
             try {
@@ -44,15 +51,36 @@ public class TextureLoader {
         }
         return t;
     }
+
+    /**
+     * @param filePath - String path to the texture you want to load relative to resources,
+     * Example: imagePath("missing.png")
+     * @return <b>com.badlogic.gdx.graphics.Texture</b> - The texture from the path provided, or null if it doesn't exist.
+     */
     public static Texture getTextureNull(final String filePath) {
-        if (textures.get(filePath) == null) {
+        return getTextureNull(filePath, true);
+    }
+
+    /**
+     * @param filePath - String path to the texture you want to load relative to resources,
+     * Example: imagePath("missing.png")
+     * @param linear - Whether the image should use a linear or nearest filter for scaling.
+     * @return <b>com.badlogic.gdx.graphics.Texture</b> - The texture from the path provided, or null if it doesn't exist.
+     */
+    public static Texture getTextureNull(final String filePath, boolean linear) {
+        if (!textures.containsKey(filePath)) {
             try {
-                loadTexture(filePath);
+                loadTexture(filePath, linear);
             } catch (GdxRuntimeException e) {
-                return null;
+                textures.put(filePath, null);
             }
         }
-        return textures.get(filePath);
+        Texture t = textures.get(filePath);
+        if (t != null && t.getTextureObjectHandle() == 0) {
+            textures.remove(filePath);
+            t = getTextureNull(filePath, linear);
+        }
+        return t;
     }
 
     public static String getCardTextureString(final String cardName, final AbstractCard.CardType cardType)
