@@ -286,7 +286,7 @@ public abstract class BaseCard extends CustomCard {
         return var.base;
     }
     public int customVar(String key) {
-        LocalVarInfo var = cardVariables.get(key);
+        LocalVarInfo var = cardVariables == null ? null : cardVariables.get(key); //Prevents crashing when used with dynamic text
         if (var == null)
             return -1;
         return var.value;
@@ -556,7 +556,7 @@ public abstract class BaseCard extends CustomCard {
     }
 
 
-    private static class LocalVarInfo {
+    protected static class LocalVarInfo {
         int base, value, upgrade;
         int[] aoeValue = null;
         boolean upgraded = false;
