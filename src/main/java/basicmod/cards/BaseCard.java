@@ -5,8 +5,10 @@ import basemod.abstracts.CustomCard;
 import basemod.abstracts.DynamicVariable;
 import basicmod.BasicMod;
 import basicmod.util.CardStats;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.localization.CardStrings;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
@@ -235,6 +237,24 @@ public abstract class BaseCard extends CustomCard {
                 });
                 break;
         }
+    }
+
+    protected final void colorCustomVar(String key, Color normalColor) {
+        colorCustomVar(key, normalColor, Settings.GREEN_TEXT_COLOR, Settings.RED_TEXT_COLOR, Settings.GREEN_TEXT_COLOR);
+    }
+    protected final void colorCustomVar(String key, Color normalColor, Color increasedColor, Color decreasedColor) {
+        colorCustomVar(key, normalColor, increasedColor, decreasedColor, increasedColor);
+    }
+    protected final void colorCustomVar(String key, Color normalColor, Color increasedColor, Color decreasedColor, Color upgradedColor) {
+        LocalVarInfo var = getCustomVar(key);
+        if (var == null) {
+            throw new IllegalArgumentException("Attempted to set color of variable that hasn't been registered.");
+        }
+
+        var.normalColor = normalColor;
+        var.increasedColor = increasedColor;
+        var.decreasedColor = decreasedColor;
+        var.upgradedColor = upgradedColor;
     }
 
 
@@ -515,6 +535,8 @@ public abstract class BaseCard extends CustomCard {
     private static class QuickDynamicVariable extends DynamicVariable {
         final String localKey, key;
 
+        private BaseCard current = null;
+
         public QuickDynamicVariable(String key) {
             this.localKey = key;
             this.key = makeID(key);
@@ -536,7 +558,7 @@ public abstract class BaseCard extends CustomCard {
 
         @Override
         public boolean isModified(AbstractCard c) {
-            return c instanceof BaseCard && ((BaseCard) c).isCustomVarModified(localKey);
+            return c instanceof BaseCard && (current = (BaseCard) c).isCustomVarModified(localKey);
         }
 
         @Override
@@ -553,6 +575,38 @@ public abstract class BaseCard extends CustomCard {
         public boolean upgraded(AbstractCard c) {
             return c instanceof BaseCard && ((BaseCard) c).customVarUpgraded(localKey);
         }
+
+        public Color getNormalColor() {
+            LocalVarInfo var;
+            if (current == null || (var = current.getCustomVar(localKey)) == null)
+                return Settings.CREAM_COLOR;
+
+            return var.normalColor;
+        }
+
+        public Color getUpgradedColor() {
+            LocalVarInfo var;
+            if (current == null || (var = current.getCustomVar(localKey)) == null)
+                return Settings.GREEN_TEXT_COLOR;
+
+            return var.upgradedColor;
+        }
+
+        public Color getIncreasedValueColor() {
+            LocalVarInfo var;
+            if (current == null || (var = current.getCustomVar(localKey)) == null)
+                return Settings.GREEN_TEXT_COLOR;
+
+            return var.increasedColor;
+        }
+
+        public Color getDecreasedValueColor() {
+            LocalVarInfo var;
+            if (current == null || (var = current.getCustomVar(localKey)) == null)
+                return Settings.RED_TEXT_COLOR;
+
+            return var.decreasedColor;
+        }
     }
 
 
@@ -561,6 +615,10 @@ public abstract class BaseCard extends CustomCard {
         int[] aoeValue = null;
         boolean upgraded = false;
         boolean forceModified = false;
+        Color normalColor = Settings.CREAM_COLOR;
+        Color upgradedColor = Settings.GREEN_TEXT_COLOR;
+        Color increasedColor = Settings.GREEN_TEXT_COLOR;
+        Color decreasedColor = Settings.RED_TEXT_COLOR;
 
         BiFunction<AbstractMonster, Integer, Integer> calculation = LocalVarInfo::noCalc;
 
