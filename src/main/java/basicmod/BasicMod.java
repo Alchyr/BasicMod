@@ -118,6 +118,7 @@ public class BasicMod implements
         String json = Gdx.files.internal(localizationPath(defaultLanguage, "Keywords.json")).readString(String.valueOf(StandardCharsets.UTF_8));
         KeywordInfo[] keywords = gson.fromJson(json, KeywordInfo[].class);
         for (KeywordInfo keyword : keywords) {
+            keyword.prep();
             registerKeyword(keyword);
         }
 
