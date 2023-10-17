@@ -12,13 +12,17 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public abstract class BasePotion extends AbstractPotion {
-    private static final Field liquidImg, hybridImg, spotsImg;
+    private static final Field containerImg, outlineImg, liquidImg, hybridImg, spotsImg;
     static {
         try {
+            containerImg = AbstractPotion.class.getDeclaredField("containerImg");
+            outlineImg = AbstractPotion.class.getDeclaredField("outlineImg");
             liquidImg = AbstractPotion.class.getDeclaredField("liquidImg");
             hybridImg = AbstractPotion.class.getDeclaredField("hybridImg");
             spotsImg = AbstractPotion.class.getDeclaredField("spotsImg");
 
+            containerImg.setAccessible(true);
+            outlineImg.setAccessible(true);
             liquidImg.setAccessible(true);
             hybridImg.setAccessible(true);
             spotsImg.setAccessible(true);
@@ -78,6 +82,20 @@ public abstract class BasePotion extends AbstractPotion {
 
     }
 
+    public Texture getOutlineImg() {
+        try {
+            return (Texture) outlineImg.get(this);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public Texture getContainerImg() {
+        try {
+            return (Texture) containerImg.get(this);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public Texture getLiquidImg() {
         try {
             return (Texture) liquidImg.get(this);
@@ -100,6 +118,20 @@ public abstract class BasePotion extends AbstractPotion {
         }
     }
 
+    public void setOutlineImg(Texture t) {
+        try {
+            outlineImg.set(this, t);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void setContainerImg(Texture t) {
+        try {
+            containerImg.set(this, t);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void setLiquidImg(Texture t) {
         try {
             liquidImg.set(this, t);
