@@ -537,6 +537,15 @@ public abstract class BaseCard extends CustomCard {
         super.calculateCardDamage(m);
     }
 
+    @Override
+    public void resetAttributes() {
+        super.resetAttributes();
+
+        for (LocalVarInfo var : cardVariables.values()) {
+            var.value = var.base;
+        }
+    }
+
     private static class QuickDynamicVariable extends DynamicVariable {
         final String localKey, key;
 
