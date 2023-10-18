@@ -141,7 +141,7 @@ public abstract class BaseCard extends CustomCard {
         this.setCustomVar(key, base, 0);
     }
     protected final void setCustomVar(String key, int base, int upgrade) {
-        cardVariables.put(key, new LocalVarInfo(base, upgrade));
+        setCustomVarValue(key, base, upgrade);
 
         if (!customVars.containsKey(key)) {
             QuickDynamicVariable var = new QuickDynamicVariable(key);
@@ -160,7 +160,7 @@ public abstract class BaseCard extends CustomCard {
         setCustomVar(key, type, base, 0);
     }
     protected final void setCustomVar(String key, VariableType type, int base, int upgrade) {
-        cardVariables.put(key, new LocalVarInfo(base, upgrade));
+        setCustomVarValue(key, base, upgrade);
 
         switch (type) {
             case DAMAGE:
@@ -188,7 +188,7 @@ public abstract class BaseCard extends CustomCard {
         setCustomVar(key, type, base, 0, preCalc, postCalc);
     }
     protected final void setCustomVar(String key, VariableType type, int base, int upgrade, BiFunction<AbstractMonster, Integer, Integer> preCalc, BiFunction<AbstractMonster, Integer, Integer> postCalc) {
-        cardVariables.put(key, new LocalVarInfo(base, upgrade));
+        setCustomVarValue(key, base, upgrade);
 
         switch (type) {
             case DAMAGE:
@@ -242,6 +242,19 @@ public abstract class BaseCard extends CustomCard {
             BaseMod.addDynamicVariable(var);
             initializeDescription();
         }
+    }
+
+    private void setCustomVarValue(String key, int base, int upg) {
+        cardVariables.compute(key, (k, old)->{
+            if (old == null) {
+                return new LocalVarInfo(base, upg);
+            }
+            else {
+                old.base = base;
+                old.upgrade = upg;
+                return old;
+            }
+        });
     }
 
     protected final void colorCustomVar(String key, Color normalColor) {
