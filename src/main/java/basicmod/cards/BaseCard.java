@@ -234,6 +234,16 @@ public abstract class BaseCard extends CustomCard {
                     return block;
                 });
                 break;
+            default:
+                setVarCalculation(key, (m, baseVal)->{
+                    int tmp = baseVal;
+
+                    tmp = preCalc.apply(m, tmp);
+                    tmp = postCalc.apply(m, tmp);
+
+                    return tmp;
+                });
+                break;
         }
 
         if (!customVars.containsKey(key)) {
