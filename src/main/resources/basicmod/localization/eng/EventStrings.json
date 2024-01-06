@@ -8,7 +8,7 @@
       "#rRed #gGreen #yYellow #bBlue #pPurple. ~Wavy~ @vibrating.@",
       "You have to mark every word individually.",
       "You can also use [#ffffff]white[] hex color codes like this to color text.",
-      "This also works in card text! But not on keywords."
+      "Hex color codes also work in card text! But not on keywords, without some workarounds."
     ],
     "OPTIONS": [
       "[Action Description] What you actually get.",

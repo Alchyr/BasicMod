@@ -10,6 +10,7 @@
         <steam.windows>C:/Program Files (x86)/steam/steamapps</steam.windows>
         <steam.mac>${user.home}/Library/Application Support/Steam/steamapps</steam.mac>
         <steam.linux>${user.home}/.local/share/Steam/steamapps</steam.linux>
+        <!-- In the Maven tab, under Profiles, make sure only the profile for your system is enabled. Windows is the default. -->
 
         <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
