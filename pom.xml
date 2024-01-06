@@ -8,11 +8,13 @@
         <!-- Change the path for your system to match your Steam installation. -->
         <steam.windows>C:/Program Files (x86)/steam/steamapps</steam.windows>
         <steam.mac>${user.home}/Library/Application Support/Steam/steamapps</steam.mac>
+        <steam.linux>${user.home}/.steam/debian-installation/steamapps</steam.linux>
 
         <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
         <ModTheSpire.version>3.30.0</ModTheSpire.version>
 
+        <!-- These two 1.8s are referring to the Java version; don't change them. -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -174,12 +176,13 @@
                 <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
             </properties>
         </profile>
+
         <profile>
             <id>mac</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
                 <os>
-                    <family>unix</family>
+                    <family>mac</family>
                 </os>
             </activation>
             <properties>
@@ -208,9 +211,21 @@
                         </executions>
                     </plugin>
                 </plugins>
-
             </build>
+        </profile>
 
+        <profile>
+            <id>linux</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <steam.path>${steam.linux}</steam.path>
+                <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
+            </properties>
         </profile>
     </profiles>
 </project>
