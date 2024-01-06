@@ -6,9 +6,10 @@
         <author>Me! (Or well, you. If you want to use \"quotes\" make sure you have slashes in front of them like this.)</author>
 
         <!-- Change the path for your system to match your Steam installation. -->
+        <!-- If you're not sure, go to Slay the Spire in the Steam library, and choose Manage -> Browse local files -->
         <steam.windows>C:/Program Files (x86)/steam/steamapps</steam.windows>
         <steam.mac>${user.home}/Library/Application Support/Steam/steamapps</steam.mac>
-        <steam.linux>${user.home}/.steam/debian-installation/steamapps</steam.linux>
+        <steam.linux>${user.home}/.local/share/Steam/steamapps</steam.linux>
 
         <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
