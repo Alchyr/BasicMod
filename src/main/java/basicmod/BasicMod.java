@@ -7,7 +7,10 @@ import basemod.interfaces.PostInitializeSubscriber;
 import basicmod.util.GeneralUtils;
 import basicmod.util.KeywordInfo;
 import basicmod.util.TextureLoader;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglFileHandle;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.evacipated.cardcrawl.modthespire.Loader;
@@ -32,8 +35,8 @@ public class BasicMod implements
     public static ModInfo info;
     public static String modID; //Edit your pom.xml to change this
     static { loadModInfo(); }
+    private static final String resourcesFolder = checkResourcesPath();
     public static final Logger logger = LogManager.getLogger(modID); //Used to output to the console.
-    private static final String resourcesFolder = "basicmod";
 
     //This is used to prefix the IDs of various objects like cards and relics,
     //to avoid conflicts between different mods using the same name for things.
@@ -57,6 +60,9 @@ public class BasicMod implements
         Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
         //Set up the mod information displayed in the in-game mods menu.
         //The information used is taken from your pom.xml file.
+
+        //If you want to set up a config panel, that will be done here.
+        //The Mod Badges page has a basic example of this, but setting up config is overall a bit complex.
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, null);
     }
 
@@ -165,8 +171,29 @@ public class BasicMod implements
         return resourcesFolder + "/images/relics/" + file;
     }
 
+    /**
+     * Checks the expected resources path based on the package name.
+     */
+    private static String checkResourcesPath() {
+        String name = BasicMod.class.getName(); //getPackage can be iffy with patching, so class name is used instead.
+        int separator = name.indexOf('.');
+        if (separator > 0)
+            name = name.substring(0, separator);
 
-    //This determines the mod's ID based on information stored by ModTheSpire.
+        FileHandle resources = new LwjglFileHandle(name, Files.FileType.Internal);
+        if (resources.child("images").exists() && resources.child("localization").exists()) {
+            return name;
+        }
+
+        throw new RuntimeException("\n\tFailed to find resources folder; expected it to be named \"" + name + "\"." +
+                " Either make sure the folder under resources has the same name as your mod's package, or change the line\n" +
+                "\t\"private static final String resourcesFolder = checkResourcesPath();\"\n" +
+                "\tat the top of the " + BasicMod.class.getSimpleName() + " java file.");
+    }
+
+    /**
+     * This determines the mod's ID based on information stored by ModTheSpire.
+     */
     private static void loadModInfo() {
         Optional<ModInfo> infos = Arrays.stream(Loader.MODINFOS).filter((modInfo)->{
             AnnotationDB annotationDB = Patcher.annotationDBMap.get(modInfo.jarURL);
