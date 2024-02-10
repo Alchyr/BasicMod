@@ -180,6 +180,20 @@
         </profile>
 
         <profile>
+            <id>linux</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <steam.path>${steam.linux}</steam.path>
+                <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
+            </properties>
+        </profile>
+
+        <profile>
             <id>mac</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -214,20 +228,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-
-        <profile>
-            <id>linux</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-                <os>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <properties>
-                <steam.path>${steam.linux}</steam.path>
-                <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
-            </properties>
         </profile>
     </profiles>
 </project>
