@@ -50,7 +50,7 @@ public abstract class BasePower extends AbstractPower {
                 if (normalTexture != null)
                     region48 = new TextureAtlas.AtlasRegion(normalTexture, 0, 0, normalTexture.getWidth(), normalTexture.getHeight());
             }
-            else if (normalTexture != null)
+            else
             {
                 this.img = normalTexture;
                 region48 = new TextureAtlas.AtlasRegion(normalTexture, 0, 0, normalTexture.getWidth(), normalTexture.getHeight());
