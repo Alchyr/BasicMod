@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <modID>BasicMod</modID>
+        <modID>basicmod</modID>
         <author>Me! (Or well, you. If you want to use \"quotes\" make sure you have slashes in front of them like this.)</author>
 
         <!-- Change the path for your system to match your Steam installation. -->
