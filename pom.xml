@@ -28,8 +28,8 @@
     <!-- Avoid using \ in this description, as they can cause the description to fail to load. -->
     <!-- If you really want to use them, you'll need to "escape" them by putting another one in front, like \\ -->
     <description>This is a description!\n"This" is a second line of description.
-    This "\\" is a slash. If you add another line like this:
-    All the spaces on the left of this will be gone. If you want spacing on a new line, do it:\n    like this.</description>
+        This "\\" is a slash. If you add another line like this:
+        All the spaces on the left of this will be gone. If you want spacing on a new line, do it:\n    like this.</description>
 
     <!--You shouldn't need to change anything below this point, but feel free to look at it.-->
     <!--You'll get a warning regarding these when you package your mod, but don't worry, it's just set up like this for convenience.-->

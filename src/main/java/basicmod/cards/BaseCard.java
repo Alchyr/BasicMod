@@ -5,6 +5,7 @@ import basemod.abstracts.CustomCard;
 import basemod.abstracts.DynamicVariable;
 import basicmod.BasicMod;
 import basicmod.util.CardStats;
+import basicmod.util.TriFunction;
 import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -16,7 +17,6 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 import static basicmod.util.GeneralUtils.removePrefix;
 import static basicmod.util.TextureLoader.getCardTextureString;
@@ -178,68 +178,69 @@ public abstract class BaseCard extends CustomCard {
             initializeDescription();
         }
     }
-    protected final void setCustomVar(String key, VariableType type, int base, BiFunction<AbstractMonster, Integer, Integer> preCalc) {
+    protected final void setCustomVar(String key, VariableType type, int base, TriFunction<BaseCard, AbstractMonster, Integer, Integer> preCalc) {
         setCustomVar(key, type, base, 0, preCalc);
     }
-    protected final void setCustomVar(String key, VariableType type, int base, int upgrade, BiFunction<AbstractMonster, Integer, Integer> preCalc) {
-        setCustomVar(key, type, base, upgrade, preCalc, (m, val)->val);
+    protected final void setCustomVar(String key, VariableType type, int base, int upgrade, TriFunction<BaseCard, AbstractMonster, Integer, Integer> preCalc) {
+        setCustomVar(key, type, base, upgrade, preCalc, LocalVarInfo::noCalc);
     }
-    protected final void setCustomVar(String key, VariableType type, int base, BiFunction<AbstractMonster, Integer, Integer> preCalc, BiFunction<AbstractMonster, Integer, Integer> postCalc) {
+    protected final void setCustomVar(String key, VariableType type, int base, TriFunction<BaseCard, AbstractMonster, Integer, Integer> preCalc, TriFunction<BaseCard, AbstractMonster, Integer, Integer> postCalc) {
         setCustomVar(key, type, base, 0, preCalc, postCalc);
     }
-    protected final void setCustomVar(String key, VariableType type, int base, int upgrade, BiFunction<AbstractMonster, Integer, Integer> preCalc, BiFunction<AbstractMonster, Integer, Integer> postCalc) {
+    protected final void setCustomVar(String key, VariableType type, int base, int upgrade, TriFunction<BaseCard, AbstractMonster, Integer, Integer> preCalc, TriFunction<BaseCard, AbstractMonster, Integer, Integer> postCalc) {
         setCustomVarValue(key, base, upgrade);
 
         switch (type) {
             case DAMAGE:
-                setVarCalculation(key, (m, baseVal) -> {
-                    boolean wasMultiDamage = this.isMultiDamage;
-                    this.isMultiDamage = false;
+                setVarCalculation(key, (c, m, baseVal)->{
+                    boolean wasMultiDamage = c.isMultiDamage;
+                    c.isMultiDamage = false;
 
-                    int tmp = this.baseDamage;
+                    int origBase = c.baseDamage, origVal = c.damage;
 
-                    this.baseDamage = baseVal;
-
-                    this.baseDamage = preCalc.apply(m, this.baseDamage);
+                    c.baseDamage = preCalc.apply(c, m, baseVal);
 
                     if (m != null)
-                        super.calculateCardDamage(m);
+                        c.calculateCardDamage(m);
                     else
-                        super.applyPowers();
+                        c.applyPowers();
 
-                    this.damage = postCalc.apply(m, this.damage);
+                    c.damage = postCalc.apply(c, m, c.damage);
 
-                    this.baseDamage = tmp;
-                    this.isMultiDamage = wasMultiDamage;
+                    c.baseDamage = origBase;
+                    c.isMultiDamage = wasMultiDamage;
 
-                    return damage;
+                    int result = c.damage;
+                    c.damage = origVal;
+
+                    return result;
                 });
                 break;
             case BLOCK:
-                setVarCalculation(key, (m, baseVal)->{
-                    int tmp = this.baseBlock;
+                setVarCalculation(key, (c, m, baseVal)->{
+                    int origBase = c.baseBlock, origVal = c.block;
 
-                    this.baseBlock = baseVal;
-
-                    this.baseBlock = preCalc.apply(m, this.baseBlock);
+                    c.baseBlock = preCalc.apply(c, m, baseVal);
 
                     if (m != null)
-                        super.calculateCardDamage(m);
+                        c.calculateCardDamage(m);
                     else
-                        super.applyPowers();
+                        c.applyPowers();
 
-                    this.block = postCalc.apply(m, this.block);
+                    c.block = postCalc.apply(c, m, c.block);
 
-                    this.baseBlock = tmp;
-                    return block;
+                    c.baseBlock = origBase;
+                    int result = c.block;
+                    c.block = origVal;
+                    return result;
                 });
                 break;
             default:
-                setVarCalculation(key, (m, baseVal)->{
+                setVarCalculation(key, (c, m, baseVal)->{
                     int tmp = baseVal;
 
-                    tmp = preCalc.apply(m, tmp);
-                    tmp = postCalc.apply(m, tmp);
+                    tmp = preCalc.apply(c, m, tmp);
+                    tmp = postCalc.apply(c, m, tmp);
 
                     return tmp;
                 });
@@ -291,39 +292,44 @@ public abstract class BaseCard extends CustomCard {
     }
 
     protected void calculateVarAsDamage(String key) {
-        setVarCalculation(key, (m, base)->{
-            boolean wasMultiDamage = this.isMultiDamage;
-            this.isMultiDamage = false;
+        setVarCalculation(key, (c, m, base)->{
+            boolean wasMultiDamage = c.isMultiDamage;
+            c.isMultiDamage = false;
 
-            int tmp = this.baseDamage;
+            int origBase = c.baseDamage, origVal = c.damage;
 
-            this.baseDamage = base;
+            c.baseDamage = base;
             if (m != null)
-                super.calculateCardDamage(m);
+                c.calculateCardDamage(m);
             else
-                super.applyPowers();
+                c.applyPowers();
 
-            this.baseDamage = tmp;
-            this.isMultiDamage = wasMultiDamage;
+            c.baseDamage = origBase;
+            c.isMultiDamage = wasMultiDamage;
 
-            return damage;
+            int result = c.damage;
+            c.damage = origVal;
+
+            return result;
         });
     }
     protected void calculateVarAsBlock(String key) {
-        setVarCalculation(key, (m, base)->{
-            int tmp = this.baseBlock;
+        setVarCalculation(key, (c, m, base)->{
+            int origBase = c.baseBlock, origVal = c.block;
 
-            this.baseBlock = base;
+            c.baseBlock = base;
             if (m != null)
-                super.calculateCardDamage(m);
+                c.calculateCardDamage(m);
             else
-                super.applyPowers();
+                c.applyPowers();
 
-            this.baseBlock = tmp;
-            return block;
+            c.baseBlock = origBase;
+            int result = c.block;
+            c.block = origVal;
+            return result;
         });
     }
-    protected void setVarCalculation(String key, BiFunction<AbstractMonster, Integer, Integer> calculation) {
+    protected void setVarCalculation(String key, TriFunction<BaseCard, AbstractMonster, Integer, Integer> calculation) {
         cardVariables.get(key).calculation = calculation;
     }
 
@@ -514,7 +520,7 @@ public abstract class BaseCard extends CustomCard {
         if (!inCalc) {
             inCalc = true;
             for (LocalVarInfo var : cardVariables.values()) {
-                var.value = var.calculation.apply(null, var.base);
+                var.value = var.calculation.apply(this, null, var.base);
             }
             if (isMultiDamage) {
                 ArrayList<AbstractMonster> monsters = AbstractDungeon.getCurrRoom().monsters.monsters;
@@ -525,7 +531,7 @@ public abstract class BaseCard extends CustomCard {
 
                     for (int i = 0; i < monsters.size(); ++i) {
                         m = monsters.get(i);
-                        var.aoeValue[i] = var.calculation.apply(m, var.base);
+                        var.aoeValue[i] = var.calculation.apply(this, m, var.base);
                     }
                 }
             }
@@ -540,7 +546,7 @@ public abstract class BaseCard extends CustomCard {
         if (!inCalc) {
             inCalc = true;
             for (LocalVarInfo var : cardVariables.values()) {
-                var.value = var.calculation.apply(m, var.base);
+                var.value = var.calculation.apply(this, m, var.base);
             }
             if (isMultiDamage) {
                 ArrayList<AbstractMonster> monsters = AbstractDungeon.getCurrRoom().monsters.monsters;
@@ -550,7 +556,7 @@ public abstract class BaseCard extends CustomCard {
 
                     for (int i = 0; i < monsters.size(); ++i) {
                         m = monsters.get(i);
-                        var.aoeValue[i] = var.calculation.apply(m, var.base);
+                        var.aoeValue[i] = var.calculation.apply(this, m, var.base);
                     }
                 }
             }
@@ -646,7 +652,6 @@ public abstract class BaseCard extends CustomCard {
         }
     }
 
-
     protected static class LocalVarInfo {
         int base, value, upgrade;
         int[] aoeValue = null;
@@ -657,14 +662,14 @@ public abstract class BaseCard extends CustomCard {
         Color increasedColor = Settings.GREEN_TEXT_COLOR;
         Color decreasedColor = Settings.RED_TEXT_COLOR;
 
-        BiFunction<AbstractMonster, Integer, Integer> calculation = LocalVarInfo::noCalc;
+        TriFunction<BaseCard, AbstractMonster, Integer, Integer> calculation = LocalVarInfo::noCalc;
 
         public LocalVarInfo(int base, int upgrade) {
             this.base = this.value = base;
             this.upgrade = upgrade;
         }
 
-        private static int noCalc(AbstractMonster m, int base) {
+        private static int noCalc(BaseCard c, AbstractMonster m, int base) {
             return base;
         }
 
