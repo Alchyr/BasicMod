@@ -5,7 +5,9 @@ import basemod.helpers.RelicType;
 import basicmod.util.GeneralUtils;
 import basicmod.util.TextureLoader;
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.localization.RelicStrings;
 
 import static basicmod.BasicMod.relicPath;
 
@@ -25,7 +27,7 @@ public abstract class BaseRelic extends CustomRelic {
         this(id, GeneralUtils.removePrefix(id), tier, sfx);
     }
     public BaseRelic(String id, String imageName, RelicTier tier, LandingSound sfx) {
-        super(id, "", tier, sfx);
+        super(testStrings(id), "", tier, sfx);
 
         this.imageName = imageName;
         loadTexture();
@@ -70,5 +72,20 @@ public abstract class BaseRelic extends CustomRelic {
                 this.pool = pool;
                 break;
         }
+    }
+
+    /**
+     * Checks whether relic has localization set up correctly and gives a more accurate error message if it does not
+     * @param ID the relic's ID
+     * @return the relic's ID, to allow use in super constructor invocation
+     */
+    private static String testStrings(String ID) {
+        RelicStrings text = CardCrawlGame.languagePack.getRelicStrings(ID);
+        if (text == null) {
+            throw new RuntimeException("The \"" + ID + "\" relic does not have associated text. Make sure " +
+                    "there's no issue with the RelicStrings.json file, and that the ID in the json file matches the " +
+                    "relic's ID. It should look like \"${modID}:" + GeneralUtils.removePrefix(ID) + "\".");
+        }
+        return ID;
     }
 }
