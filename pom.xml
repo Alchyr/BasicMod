@@ -77,6 +77,31 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
+                <groupId>com.github.sylvainlaurent.maven</groupId>
+                <artifactId>yaml-json-validator-maven-plugin</artifactId>
+                <version>1.0.4</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                        <configuration>
+                            <validationSets>
+                                <validationSet>
+                                    <includes>
+                                        <include>src/main/resources/**/*.json</include>
+                                    </includes>
+                                </validationSet>
+                            </validationSets>
+                            <allowEmptyFiles>true</allowEmptyFiles>
+                            <skip>false</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
