@@ -55,14 +55,29 @@ public abstract class BaseCard extends CustomCard {
     final protected Map<String, LocalVarInfo> cardVariables = new HashMap<>();
 
     public BaseCard(String ID, CardStats info) {
-        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor);
+        this(ID, info, getCardTextureString(removePrefix(ID), info.cardType));
+    }
+    public BaseCard(String ID, CardStats info, String cardImage) {
+        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, cardImage);
     }
     public BaseCard(String ID, CardStats info, boolean upgradesDescription) {
-        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, upgradesDescription);
+        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, getCardTextureString(removePrefix(ID), info.cardType), upgradesDescription);
     }
-    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color)
+    public BaseCard(String ID, CardStats info, String cardImage, boolean upgradesDescription) {
+        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, cardImage, upgradesDescription);
+    }
+    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color) {
+        this(ID, cost, cardType, target, rarity, color, getCardTextureString(removePrefix(ID), cardType));
+    }
+
+    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, String cardImage, boolean upgradesDescription)
     {
-        super(ID, getName(ID), getCardTextureString(removePrefix(ID), cardType), cost, getInitialDescription(ID), cardType, color, rarity, target);
+        this(ID, cost, cardType, target, rarity, color, cardImage);
+        this.upgradesDescription = upgradesDescription;
+    }
+    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, String cardImage)
+    {
+        super(ID, getName(ID), cardImage, cost, getInitialDescription(ID), cardType, color, rarity, target);
         this.cardStrings = CardCrawlGame.languagePack.getCardStrings(cardID);
         this.originalName = cardStrings.NAME;
 
@@ -78,11 +93,6 @@ public abstract class BaseCard extends CustomCard {
         this.damageUpgrade = 0;
         this.blockUpgrade = 0;
         this.magicUpgrade = 0;
-    }
-    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, boolean upgradesDescription)
-    {
-        this(ID, cost, cardType, target, rarity, color);
-        this.upgradesDescription = upgradesDescription;
     }
 
     private static String getName(String ID) {
