@@ -60,20 +60,8 @@ public abstract class BaseCard extends CustomCard {
     public BaseCard(String ID, CardStats info, String cardImage) {
         this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, cardImage);
     }
-    public BaseCard(String ID, CardStats info, boolean upgradesDescription) {
-        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, getCardTextureString(removePrefix(ID), info.cardType), upgradesDescription);
-    }
-    public BaseCard(String ID, CardStats info, String cardImage, boolean upgradesDescription) {
-        this(ID, info.baseCost, info.cardType, info.cardTarget, info.cardRarity, info.cardColor, cardImage, upgradesDescription);
-    }
     public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color) {
         this(ID, cost, cardType, target, rarity, color, getCardTextureString(removePrefix(ID), cardType));
-    }
-
-    public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, String cardImage, boolean upgradesDescription)
-    {
-        this(ID, cost, cardType, target, rarity, color, cardImage);
-        this.upgradesDescription = upgradesDescription;
     }
     public BaseCard(String ID, int cost, CardType cardType, CardTarget target, CardRarity rarity, CardColor color, String cardImage)
     {
