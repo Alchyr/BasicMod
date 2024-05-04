@@ -2,10 +2,14 @@ package basicmod.powers;
 
 import basicmod.util.GeneralUtils;
 import basicmod.util.TextureLoader;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.localization.PowerStrings;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 
@@ -16,6 +20,12 @@ public abstract class BasePower extends AbstractPower {
     }
     protected AbstractCreature source;
     protected String[] DESCRIPTIONS;
+
+    //Will not display if at 0. You can override renderAmount to render it however you want.
+    //amount2 will not stack like the normal amount variable when stacking a power.
+    public int amount2 = 0;
+    protected Color redColor2 = Color.RED.cpy();
+    protected Color greenColor2 = Color.GREEN.cpy();
 
     public BasePower(String id, PowerType powerType, boolean isTurnBased, AbstractCreature owner, int amount) {
         this(id, powerType, isTurnBased, owner, null, amount);
@@ -59,5 +69,19 @@ public abstract class BasePower extends AbstractPower {
 
         if (initDescription)
             this.updateDescription();
+    }
+
+    public void renderAmount(SpriteBatch sb, float x, float y, Color c) {
+        super.renderAmount(sb, x, y, c);
+
+        if (this.amount2 != 0) {
+            if (!this.isTurnBased) {
+                float alpha = c.a;
+                c = this.amount2 > 0 ? this.greenColor2 : this.redColor2;
+                c.a = alpha;
+            }
+
+            FontHelper.renderFontRightTopAligned(sb, FontHelper.powerAmountFont, Integer.toString(this.amount2), x, y + 15.0F * Settings.scale, this.fontScale, c);
+        }
     }
 }
