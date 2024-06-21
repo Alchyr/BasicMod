@@ -34,9 +34,10 @@ public class TextureLoader {
             try {
                 loadTexture(filePath, linear);
             } catch (GdxRuntimeException e) {
+                logger.info("Failed to find texture " + filePath, e);
                 Texture missing = getTextureNull(imagePath("missing.png"), false);
                 if (missing == null) {
-                    logger.info("missing.png is missing!");
+                    logger.info("missing.png is missing, should be at " + imagePath("missing.png"));
                 }
                 return missing;
             }
