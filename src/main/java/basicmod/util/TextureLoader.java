@@ -34,14 +34,11 @@ public class TextureLoader {
             try {
                 loadTexture(filePath, linear);
             } catch (GdxRuntimeException e) {
-                try
-                {
-                    return getTexture(imagePath("missing.png"), false);
-                }
-                catch (GdxRuntimeException ex) {
+                Texture missing = getTextureNull(imagePath("missing.png"), false);
+                if (missing == null) {
                     logger.info("missing.png is missing!");
-                    return null;
                 }
+                return missing;
             }
         }
         Texture t = textures.get(filePath);
