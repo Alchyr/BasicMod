@@ -82,35 +82,35 @@ public abstract class BasePotion extends AbstractPotion {
 
     }
 
-    public Texture getOutlineImg() {
+    public final Texture getOutlineImg() {
         try {
             return (Texture) outlineImg.get(this);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public Texture getContainerImg() {
+    public final Texture getContainerImg() {
         try {
             return (Texture) containerImg.get(this);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public Texture getLiquidImg() {
+    public final  Texture getLiquidImg() {
         try {
             return (Texture) liquidImg.get(this);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public Texture getHybridImg() {
+    public final Texture getHybridImg() {
         try {
             return (Texture) hybridImg.get(this);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public Texture getSpotsImg() {
+    public final Texture getSpotsImg() {
         try {
             return (Texture) spotsImg.get(this);
         } catch (IllegalAccessException e) {
@@ -118,35 +118,35 @@ public abstract class BasePotion extends AbstractPotion {
         }
     }
 
-    public void setOutlineImg(Texture t) {
+    public final void setOutlineImg(Texture t) {
         try {
             outlineImg.set(this, t);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public void setContainerImg(Texture t) {
+    public final void setContainerImg(Texture t) {
         try {
             containerImg.set(this, t);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public void setLiquidImg(Texture t) {
+    public final void setLiquidImg(Texture t) {
         try {
             liquidImg.set(this, t);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public void setHybridImg(Texture t) {
+    public final void setHybridImg(Texture t) {
         try {
             hybridImg.set(this, t);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
-    public void setSpotsImg(Texture t) {
+    public final void setSpotsImg(Texture t) {
         try {
             spotsImg.set(this, t);
         } catch (IllegalAccessException e) {
