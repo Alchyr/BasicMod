@@ -26,11 +26,16 @@ public abstract class BaseRelic extends CustomRelic {
     public BaseRelic(String id, RelicTier tier, LandingSound sfx) {
         this(id, GeneralUtils.removePrefix(id), tier, sfx);
     }
+
+    //To use a basegame relic image, just pass in the imagename used by a basegame relic instead of the ID.
+    //eg. "calendar.png"
     public BaseRelic(String id, String imageName, RelicTier tier, LandingSound sfx) {
-        super(testStrings(id), "", tier, sfx);
+        super(testStrings(id), notPng(imageName) ? "" : imageName, tier, sfx);
 
         this.imageName = imageName;
-        loadTexture();
+        if (notPng(imageName)) {
+            loadTexture();
+        }
     }
 
     protected void loadTexture() {
@@ -49,8 +54,13 @@ public abstract class BaseRelic extends CustomRelic {
 
     @Override
     public void loadLargeImg() {
-        if (largeImg == null) {
-            this.largeImg = ImageMaster.loadImage(relicPath("large/" + imageName + ".png"));
+        if (notPng(imageName)) {
+            if (largeImg == null) {
+                this.largeImg = ImageMaster.loadImage(relicPath("large/" + imageName + ".png"));
+            }
+        }
+        else {
+            super.loadLargeImg();
         }
     }
 
@@ -87,5 +97,9 @@ public abstract class BaseRelic extends CustomRelic {
                     "relic's ID. It should look like \"${modID}:" + GeneralUtils.removePrefix(ID) + "\".");
         }
         return ID;
+    }
+
+    private static boolean notPng(String name) {
+        return !name.endsWith(".png");
     }
 }
