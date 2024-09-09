@@ -33,6 +33,7 @@ public abstract class BasePotion extends AbstractPotion {
     }
 
     public PotionStrings potionStrings;
+    public String[] DESCRIPTIONS;
     public int basePotency;
     public AbstractPlayer.PlayerClass playerClass = null;
 
@@ -64,6 +65,7 @@ public abstract class BasePotion extends AbstractPotion {
         this.potency = this.getPotency();
 
         potionStrings = CardCrawlGame.languagePack.getPotionString(ID);
+        DESCRIPTIONS = potionStrings.DESCRIPTIONS;
         this.name = potionStrings.NAME;
         this.description = getDescription();
 
