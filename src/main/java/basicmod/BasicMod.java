@@ -181,14 +181,23 @@ public class BasicMod implements
             name = name.substring(0, separator);
 
         FileHandle resources = new LwjglFileHandle(name, Files.FileType.Internal);
-        if (resources.child("images").exists() && resources.child("localization").exists()) {
-            return name;
+
+        if (!resources.exists()) {
+            throw new RuntimeException("\n\tFailed to find resources folder; expected it to be named \"" + name + "\"." +
+                    " Either make sure the folder under resources has the same name as your mod's package, or change the line\n" +
+                    "\t\"private static final String resourcesFolder = checkResourcesPath();\"\n" +
+                    "\tat the top of the " + BasicMod.class.getSimpleName() + " java file.");
+        }
+        if (!resources.child("images").exists()) {
+            throw new RuntimeException("\n\tFailed to find the 'images' folder in the mod's 'resources/" + name + "' folder; Make sure the " +
+                    "images folder is in the correct location.");
+        }
+        if (!resources.child("localization").exists()) {
+            throw new RuntimeException("\n\tFailed to find the 'localization' folder in the mod's 'resources/" + name + "' folder; Make sure the " +
+                    "localization folder is in the correct location.");
         }
 
-        throw new RuntimeException("\n\tFailed to find resources folder; expected it to be named \"" + name + "\"." +
-                " Either make sure the folder under resources has the same name as your mod's package, or change the line\n" +
-                "\t\"private static final String resourcesFolder = checkResourcesPath();\"\n" +
-                "\tat the top of the " + BasicMod.class.getSimpleName() + " java file.");
+        return name;
     }
 
     /**
