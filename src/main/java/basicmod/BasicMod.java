@@ -62,7 +62,7 @@ public class BasicMod implements
         //The information used is taken from your pom.xml file.
 
         //If you want to set up a config panel, that will be done here.
-        //The Mod Badges page has a basic example of this, but setting up config is overall a bit complex.
+        //You can find information about this on the BaseMod wiki page "Mod Config and Panel".
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, null);
     }
 
