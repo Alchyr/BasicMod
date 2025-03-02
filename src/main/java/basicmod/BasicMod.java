@@ -1,9 +1,12 @@
 package basicmod;
 
+import basemod.AutoAdd;
 import basemod.BaseMod;
+import basemod.interfaces.EditCardsSubscriber;
 import basemod.interfaces.EditKeywordsSubscriber;
 import basemod.interfaces.EditStringsSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
+import basicmod.cards.BaseCard;
 import basicmod.util.GeneralUtils;
 import basicmod.util.KeywordInfo;
 import basicmod.util.TextureLoader;
@@ -30,6 +33,7 @@ import java.util.*;
 @SpireInitializer
 public class BasicMod implements
         EditStringsSubscriber,
+        EditCardsSubscriber,
         EditKeywordsSubscriber,
         PostInitializeSubscriber {
     public static ModInfo info;
@@ -218,5 +222,13 @@ public class BasicMod implements
         else {
             throw new RuntimeException("Failed to determine mod info/ID based on initializer.");
         }
+    }
+
+    @Override
+    public void receiveEditCards() {
+        new AutoAdd(modID) //Loads files from this mod
+                .packageFilter(BaseCard.class) //In the same package as this class
+                .setDefaultSeen(true) //And marks them as seen in the compendium
+                .cards(); //Adds the cards
     }
 }

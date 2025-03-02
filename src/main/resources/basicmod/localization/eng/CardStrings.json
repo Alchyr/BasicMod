@@ -1,12 +1,20 @@
 {
   "${modID}:ExampleCard": {
     "NAME": "Name",
-    "DESCRIPTION": "Description. NL Second line.",
+    "DESCRIPTION": "Description.",
     "UPGRADE_DESCRIPTION": "This will automatically be used if the card is upgraded. Remove it if unneeded.",
     "EXTENDED_DESCRIPTION": [
       "You can put more text in here.",
       "If you need to use it for stuff.",
       "Blizzard is a good example for this."
+    ]
+  },
+  "${modID}:MegaStrike": {
+    "NAME": "MEEEGGAAA STRIKE",
+    "DESCRIPTION": "This shit will fuckin kill u - deal 60 damage",
+    "UPGRADE_DESCRIPTION": "This shit will kill u extra bad - deal 69 damage",
+    "EXTENDED_DESCRIPTION": [
+      "Do a buncha damage"
     ]
   }
 }
