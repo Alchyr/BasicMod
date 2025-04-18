@@ -488,11 +488,7 @@ public abstract class BaseCard extends CustomCard {
                 this.upgradeMagicNumber(magicUpgrade);
 
             for (LocalVarInfo var : cardVariables.values()) {
-                if (var.upgrade != 0) {
-                    var.base += var.upgrade;
-                    var.value = var.base;
-                    var.upgraded = true;
-                }
+                upgradeCustomVar(var);
             }
 
             if (baseExhaust ^ upgExhaust)
@@ -509,6 +505,34 @@ public abstract class BaseCard extends CustomCard {
 
 
             this.initializeDescription();
+        }
+    }
+
+    protected void upgradeCustomVar(String key) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null) {
+            throw new NullPointerException("Custom variable with key " + key + " does not exist in " + getClass().getName());
+        }
+        upgradeCustomVar(var, var.upgrade);
+    }
+
+    protected void upgradeCustomVar(String key, int amount) {
+        LocalVarInfo var = cardVariables.get(key);
+        if (var == null) {
+            throw new NullPointerException("Custom variable with key " + key + " does not exist in " + getClass().getName());
+        }
+        upgradeCustomVar(var, amount);
+    }
+
+    protected void upgradeCustomVar(LocalVarInfo var) {
+        upgradeCustomVar(var, var.upgrade);
+    }
+
+    protected void upgradeCustomVar(LocalVarInfo var, int amt) {
+        if (amt != 0) {
+            var.base += amt;
+            var.value = var.base;
+            var.upgraded = true;
         }
     }
 

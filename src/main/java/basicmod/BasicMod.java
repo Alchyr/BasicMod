@@ -183,7 +183,7 @@ public class BasicMod implements
         FileHandle resources = new LwjglFileHandle(name, Files.FileType.Internal);
 
         if (!resources.exists()) {
-            throw new RuntimeException("\n\tFailed to find resources folder; expected it to be named \"" + name + "\"." +
+            throw new RuntimeException("\n\tFailed to find resources folder; expected it to be at  \"resources/" + name + "\"." +
                     " Either make sure the folder under resources has the same name as your mod's package, or change the line\n" +
                     "\t\"private static final String resourcesFolder = checkResourcesPath();\"\n" +
                     "\tat the top of the " + BasicMod.class.getSimpleName() + " java file.");
