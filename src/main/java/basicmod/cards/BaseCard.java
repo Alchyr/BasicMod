@@ -400,40 +400,40 @@ public abstract class BaseCard extends CustomCard {
 
     @Override
     public AbstractCard makeStatEquivalentCopy() {
-        AbstractCard card = super.makeStatEquivalentCopy();
+        AbstractCard candidate = super.makeStatEquivalentCopy();
 
-        if (card instanceof BaseCard)
-        {
+        if (candidate instanceof BaseCard) {
+            BaseCard card = (BaseCard) candidate;
             card.rawDescription = this.rawDescription;
-            ((BaseCard) card).upgradesDescription = this.upgradesDescription;
+            card.upgradesDescription = this.upgradesDescription;
 
-            ((BaseCard) card).baseCost = this.baseCost;
+            card.baseCost = this.baseCost;
 
-            ((BaseCard) card).upgradeCost = this.upgradeCost;
-            ((BaseCard) card).upgradeDamage = this.upgradeDamage;
-            ((BaseCard) card).upgradeBlock = this.upgradeBlock;
-            ((BaseCard) card).upgradeMagic = this.upgradeMagic;
+            card.upgradeCost = this.upgradeCost;
+            card.upgradeDamage = this.upgradeDamage;
+            card.upgradeBlock = this.upgradeBlock;
+            card.upgradeMagic = this.upgradeMagic;
 
-            ((BaseCard) card).costUpgrade = this.costUpgrade;
-            ((BaseCard) card).damageUpgrade = this.damageUpgrade;
-            ((BaseCard) card).blockUpgrade = this.blockUpgrade;
-            ((BaseCard) card).magicUpgrade = this.magicUpgrade;
+            card.costUpgrade = this.costUpgrade;
+            card.damageUpgrade = this.damageUpgrade;
+            card.blockUpgrade = this.blockUpgrade;
+            card.magicUpgrade = this.magicUpgrade;
 
-            ((BaseCard) card).baseExhaust = this.baseExhaust;
-            ((BaseCard) card).upgExhaust = this.upgExhaust;
-            ((BaseCard) card).baseEthereal = this.baseEthereal;
-            ((BaseCard) card).upgEthereal = this.upgEthereal;
-            ((BaseCard) card).baseInnate = this.baseInnate;
-            ((BaseCard) card).upgInnate = this.upgInnate;
-            ((BaseCard) card).baseRetain = this.baseRetain;
-            ((BaseCard) card).upgRetain = this.upgRetain;
+            card.baseExhaust = this.baseExhaust;
+            card.upgExhaust = this.upgExhaust;
+            card.baseEthereal = this.baseEthereal;
+            card.upgEthereal = this.upgEthereal;
+            card.baseInnate = this.baseInnate;
+            card.upgInnate = this.upgInnate;
+            card.baseRetain = this.baseRetain;
+            card.upgRetain = this.upgRetain;
 
             for (Map.Entry<String, LocalVarInfo> varEntry : cardVariables.entrySet()) {
-                LocalVarInfo target = ((BaseCard) card).getCustomVar(varEntry.getKey()),
+                LocalVarInfo target = card.getCustomVar(varEntry.getKey()),
                         current = varEntry.getValue();
                 if (target == null) {
-                    ((BaseCard) card).setCustomVar(varEntry.getKey(), current.base, current.upgrade);
-                    target = ((BaseCard) card).getCustomVar(varEntry.getKey());
+                    card.setCustomVar(varEntry.getKey(), current.base, current.upgrade);
+                    target = card.getCustomVar(varEntry.getKey());
                 }
                 target.base = current.base;
                 target.value = current.value;
@@ -443,7 +443,7 @@ public abstract class BaseCard extends CustomCard {
             }
         }
 
-        return card;
+        return candidate;
     }
 
     @Override
