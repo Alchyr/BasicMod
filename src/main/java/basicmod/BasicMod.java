@@ -1,11 +1,13 @@
 package basicmod;
 
 import basemod.BaseMod;
+import basemod.interfaces.AddAudioSubscriber;
 import basemod.interfaces.EditKeywordsSubscriber;
 import basemod.interfaces.EditStringsSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
 import basicmod.util.GeneralUtils;
 import basicmod.util.KeywordInfo;
+import basicmod.util.Sounds;
 import basicmod.util.TextureLoader;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
@@ -24,6 +26,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.scannotation.AnnotationDB;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -31,6 +35,7 @@ import java.util.*;
 public class BasicMod implements
         EditStringsSubscriber,
         EditKeywordsSubscriber,
+        AddAudioSubscriber,
         PostInitializeSubscriber {
     public static ModInfo info;
     public static String modID; //Edit your pom.xml to change this
@@ -153,11 +158,58 @@ public class BasicMod implements
         }
     }
 
+    @Override
+    public void receiveAddAudio() {
+        loadAudio(Sounds.class);
+    }
+
+    private static final String[] AUDIO_EXTENSIONS = { ".ogg", ".wav", ".mp3" }; //There are more valid types, but not really worth checking them all here
+    private void loadAudio(Class<?> cls) {
+        try {
+            Field[] fields = cls.getDeclaredFields();
+            outer:
+            for (Field f : fields) {
+                int modifiers = f.getModifiers();
+                if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers) && f.getType().equals(String.class)) {
+                    String s = (String) f.get(null);
+                    if (s == null) { //If no defined value, determine path using field name
+                        s = audioPath(f.getName());
+
+                        for (String ext : AUDIO_EXTENSIONS) {
+                            String testPath = s + ext;
+                            if (Gdx.files.internal(testPath).exists()) {
+                                s = testPath;
+                                BaseMod.addAudio(s, s);
+                                f.set(null, s);
+                                continue outer;
+                            }
+                        }
+                        throw new Exception("Failed to find an audio file \"" + f.getName() + "\" in " + resourcesFolder + "/audio; check to ensure the capitalization and filename are correct.");
+                    }
+                    else { //Otherwise, load defined path
+                        if (Gdx.files.internal(s).exists()) {
+                            BaseMod.addAudio(s, s);
+                        }
+                        else {
+                            throw new Exception("Failed to find audio file \"" + s + "\"; check to ensure this is the correct filepath.");
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            logger.error("Exception occurred in loadAudio: ", e);
+        }
+    }
+
     //These methods are used to generate the correct filepaths to various parts of the resources folder.
     public static String localizationPath(String lang, String file) {
         return resourcesFolder + "/localization/" + lang + "/" + file;
     }
 
+    public static String audioPath(String file) {
+        return resourcesFolder + "/audio/" + file;
+    }
     public static String imagePath(String file) {
         return resourcesFolder + "/images/" + file;
     }
