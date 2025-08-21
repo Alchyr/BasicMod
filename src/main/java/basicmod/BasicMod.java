@@ -151,7 +151,7 @@ public class BasicMod implements
     }
 
     private void registerKeyword(KeywordInfo info) {
-        BaseMod.addKeyword(modID.toLowerCase(), info.PROPER_NAME, info.NAMES, info.DESCRIPTION);
+        BaseMod.addKeyword(modID.toLowerCase(), info.PROPER_NAME, info.NAMES, info.DESCRIPTION, info.COLOR);
         if (!info.ID.isEmpty())
         {
             keywords.put(info.ID, info);
