@@ -1,0 +1,12 @@
+{
+  "${modID}:TutorialID": {
+    "LABEL": [
+      "Tutorial Name"
+    ],
+    "TEXT": [
+      " #yFeature 1: Description of feature one. NL Use #b1 #yResource to activate. NL NL ",
+      " #yFeature 2: Description of feature two. NL Use #b2 #yResources to activate. NL NL ",
+      " #yFeature 3: Description of feature three. NL Provides #b100% #yBonus. NL Unlocks after defeating #b3 #yEnemies. "
+    ]
+  }
+}

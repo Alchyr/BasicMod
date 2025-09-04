@@ -1,0 +1,18 @@
+{
+  "${modID}:MonsterID": {
+    "NAME": "Monster Name",
+    "MOVES": [
+      "Move 1 Name",
+      "Move 2 Name",
+      "Move 3 Name",
+      "Move 4 Name"
+    ],
+    "DIALOG": [
+      "First dialog line when encountering the monster.",
+      "Second dialog line during combat.",
+      "Third dialog line when using special ability.",
+      "Fourth dialog line when low on health.",
+      "Fifth dialog line when defeated."
+    ]
+  }
+}

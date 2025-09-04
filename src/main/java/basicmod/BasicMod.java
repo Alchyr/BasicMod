@@ -1,14 +1,19 @@
 package basicmod;
 
-import basemod.BaseMod;
-import basemod.interfaces.AddAudioSubscriber;
-import basemod.interfaces.EditKeywordsSubscriber;
-import basemod.interfaces.EditStringsSubscriber;
-import basemod.interfaces.PostInitializeSubscriber;
-import basicmod.util.GeneralUtils;
-import basicmod.util.KeywordInfo;
-import basicmod.util.Sounds;
-import basicmod.util.TextureLoader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.scannotation.AnnotationDB;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglFileHandle;
@@ -21,15 +26,26 @@ import com.evacipated.cardcrawl.modthespire.Patcher;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.google.gson.Gson;
 import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.localization.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.scannotation.AnnotationDB;
+import com.megacrit.cardcrawl.localization.CardStrings;
+import com.megacrit.cardcrawl.localization.CharacterStrings;
+import com.megacrit.cardcrawl.localization.EventStrings;
+import com.megacrit.cardcrawl.localization.MonsterStrings;
+import com.megacrit.cardcrawl.localization.OrbStrings;
+import com.megacrit.cardcrawl.localization.PotionStrings;
+import com.megacrit.cardcrawl.localization.PowerStrings;
+import com.megacrit.cardcrawl.localization.RelicStrings;
+import com.megacrit.cardcrawl.localization.TutorialStrings;
+import com.megacrit.cardcrawl.localization.UIStrings;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import basemod.BaseMod;
+import basemod.interfaces.AddAudioSubscriber;
+import basemod.interfaces.EditKeywordsSubscriber;
+import basemod.interfaces.EditStringsSubscriber;
+import basemod.interfaces.PostInitializeSubscriber;
+import basicmod.util.GeneralUtils;
+import basicmod.util.KeywordInfo;
+import basicmod.util.Sounds;
+import basicmod.util.TextureLoader;
 
 @SpireInitializer
 public class BasicMod implements
@@ -118,6 +134,10 @@ public class BasicMod implements
                 localizationPath(lang, "PowerStrings.json"));
         BaseMod.loadCustomStringsFile(RelicStrings.class,
                 localizationPath(lang, "RelicStrings.json"));
+        BaseMod.loadCustomStringsFile(MonsterStrings.class,
+                localizationPath(lang, "MonsterStrings.json"));
+        BaseMod.loadCustomStringsFile(TutorialStrings.class,
+                localizationPath(lang, "TutorialStrings.json"));
         BaseMod.loadCustomStringsFile(UIStrings.class,
                 localizationPath(lang, "UIStrings.json"));
     }
@@ -216,12 +236,17 @@ public class BasicMod implements
     public static String characterPath(String file) {
         return resourcesFolder + "/images/character/" + file;
     }
+    public static String monsterPath(String file) {
+        return resourcesFolder + "/images/monsters/" + file;
+    }
     public static String powerPath(String file) {
         return resourcesFolder + "/images/powers/" + file;
     }
     public static String relicPath(String file) {
         return resourcesFolder + "/images/relics/" + file;
     }
+
+
 
     /**
      * Checks the expected resources path based on the package name.
