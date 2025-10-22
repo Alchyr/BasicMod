@@ -1,10 +1,8 @@
 package basicmod;
 
 import basemod.BaseMod;
-import basemod.interfaces.AddAudioSubscriber;
-import basemod.interfaces.EditKeywordsSubscriber;
-import basemod.interfaces.EditStringsSubscriber;
-import basemod.interfaces.PostInitializeSubscriber;
+import basemod.interfaces.*;
+import basicmod.character.MyCharacter;
 import basicmod.util.GeneralUtils;
 import basicmod.util.KeywordInfo;
 import basicmod.util.Sounds;
@@ -33,6 +31,7 @@ import java.util.*;
 
 @SpireInitializer
 public class BasicMod implements
+        EditCharactersSubscriber,
         EditStringsSubscriber,
         EditKeywordsSubscriber,
         AddAudioSubscriber,
@@ -52,6 +51,8 @@ public class BasicMod implements
     //This will be called by ModTheSpire because of the @SpireInitializer annotation at the top of the class.
     public static void initialize() {
         new BasicMod();
+
+        MyCharacter.Meta.registerColor();
     }
 
     public BasicMod() {
@@ -156,6 +157,11 @@ public class BasicMod implements
         {
             keywords.put(info.ID, info);
         }
+    }
+
+    @Override
+    public void receiveEditCharacters() {
+        MyCharacter.Meta.registerCharacter();
     }
 
     @Override
